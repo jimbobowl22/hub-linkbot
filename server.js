@@ -3,9 +3,11 @@
     Please view the README before getting started.
 */
 require('dotenv').config();
-const express = require('express');
 const Discord = require('discord.js');
+const express = require('express');
+const rateLimit = require("express-rate-limit");
 
+// DISCORD CLIENT HANDLING
 const bot = new Discord.Client({
     presence: {
         status: 'dnd',
@@ -26,15 +28,29 @@ bot.on('message', async (message) => {
 });
 bot.login(process.env.BOT_TOKEN)
 
+// WEBAPP HANDLING
 const app = express();
+app.use(rateLimit({
+  max: 60, // 60 requests max...
+  windowMs: 0.5 * 60 * 1000, // ...for 0.5 minutes
+  handler: async (request, response) => {
+    response.status(403);
+    response.json({ status: 'error', error: 'Too many requests' })
+  }
+}));
 app.get('/', async (request, response) => {
     response.status(200);
     response.json({ status: 'ok', running: true })
+});
+app.use(async (request, response, next) => {
+    response.status(404)
+    response.json({ status: 'error', error: 'Path not found'})
 });
 const listener = app.listen(process.env.HUB_ACCESSPORT || 8080, async () => {
     console.log('WEB | Online!');
 });
 
+// PROCESS EXIT HANDLING
 process.stdin.resume();
 function exitHandler(options, exitCode) {
     if (bot.user) {
