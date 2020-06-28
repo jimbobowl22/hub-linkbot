@@ -1,0 +1,31 @@
+{
+  "name": "hub-linkbot",
+  "version": "1.0.0",
+  "description": "This is a Discord Bot that uses web requests in order to link your ROBLOX Product Hub to a Discord Server.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jdwoj5/hub-linkbot.git"
+  },
+  "keywords": [
+    "roblox",
+    "discord",
+    "whitelist",
+    "bot",
+    "server"
+  ],
+  "author": "jdwoj5",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jdwoj5/hub-linkbot/issues"
+  },
+  "homepage": "https://github.com/jdwoj5/hub-linkbot#readme",
+  "dependencies": {
+    "discord.js": "^12.2.0",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1"
+  }
+}
