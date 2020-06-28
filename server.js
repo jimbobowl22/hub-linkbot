@@ -11,8 +11,7 @@ const bot = new Discord.Client({
         status: 'dnd',
         activity: {
             name: 'with some Products.',
-            type: 'PLAYING',
-            url: process.env.HUB_URL
+            type: 'PLAYING'
         }
     }
 });
@@ -37,11 +36,10 @@ const listener = app.listen(process.env.HUB_ACCESSPORT || 8080, async () => {
 });
 
 process.stdin.resume();
-
 function exitHandler(options, exitCode) {
     if (bot.user) {
         bot.user.setPresence({
-            status: 'offline'
+            status: 'invisible'
         });
         bot.destroy();
     }
@@ -52,13 +50,3 @@ process.on('SIGINT', exitHandler.bind(null, {exit:true}));
 process.on('SIGUSR1', exitHandler.bind(null, {exit:true}));
 process.on('SIGUSR2', exitHandler.bind(null, {exit:true}));
 process.on('uncaughtException', exitHandler.bind(null, {exit:true}));
-
-process.on('beforeExit', (code) => {
-    bot.setPresence({
-        status: 'offline'
-    });
-    bot.destroy();
-    console.log('DISCORD | Offline!');
-    app.close();
-    console.log('WEB | Offline!')
-});
