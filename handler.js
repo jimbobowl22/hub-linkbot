@@ -33,7 +33,7 @@ for (const file of fs.readdirSync('./commands').filter(file => file.endsWith('.j
 }
 bot.on('ready', async () => {
     guild = bot.guilds.cache.get(process.env.BOT_PRIMARYGUILD);
-    if (process.argv[2] !== '--restarted') console.log('DISCORD | Online!');
+    if (process.argv[2] !== '--restarted') console.info('DISCORD | Online!');
     
     // PROCESS RESTARTED HANDLING
     async function handleRestart() {
@@ -149,7 +149,7 @@ app.use(async (request, response, next) => {
     response.json({ status: 'error', error: 'Path not found'})
 });
 const listener = app.listen(process.env.HUB_ACCESSPORT || 8080, async () => {
-    if (process.argv[2] !== '--restarted') console.log('WEB | Online!');
+    if (process.argv[2] !== '--restarted') console.info('WEB | Online!');
 });
 
 // PROCESS EXIT HANDLING
