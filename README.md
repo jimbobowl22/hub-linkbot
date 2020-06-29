@@ -8,7 +8,7 @@ To install this Discord Bot, you will need to do the following:
 2. Ensure it has the [Node.js](https://nodejs.org/en/) engine installed.
 3. Clone this repository with `git clone https://github.com/jdwoj5/hub-linkbot`
 4. Create a file named `.env`, which is where we will store crucial information. 
-   - Paste the following into your `.env` file:
+    - Paste the following into your `.env` file:
     ```env
     # BOT CONFIGURATION
     BOT_TOKEN=
@@ -32,4 +32,4 @@ To start the bot, run the following command:
 The bot will never need to come offline, as the `!restart` command restarts the whole process and updates the bot's code on it's own.
 
 ## Connecting to your Hub
-There are many ways to trigger functions in the Discord Bot from HTTP requests, but the most important thing to do is grab the IP and write down the Port that you put in the `.env` file. This information will be referenced multiple times from your ROBLOX Product Hub.
+There are many ways to trigger functions in the Discord Bot from HTTP requests, but the most important thing to do is to write down the IP which you are running this Discord Bot and write down the Port that you put in the `.env` file. This information will be referenced multiple times from the scripts in your ROBLOX Product Hub.
