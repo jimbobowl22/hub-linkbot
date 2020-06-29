@@ -22,7 +22,7 @@ module.exports = {
                     if(err) {
                         console.log(err);
                     }
-                    console.log("PROCESS | Writing the Restart Information...");
+                    // console.log("PROCESS | Writing the Restart Information...");
                     var restartData = editJson(`restart.json`, {
                         autosave: true
                     });
@@ -42,7 +42,7 @@ module.exports = {
                     process.exit(2)
                 });
             } else {
-                console.log("PROCESS | Re-writing the Restart Information...");
+                // console.log("PROCESS | Re-writing the Restart Information...");
                 var restartData = editJson(`restart.json`, {
                     autosave: true
                 });
