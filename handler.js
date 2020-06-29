@@ -7,6 +7,22 @@ const Discord = require('discord.js');
 const fs = require('fs');
 const express = require('express');
 const rateLimit = require("express-rate-limit");
+const editJsonFile = require('edit-json-file');
+
+// DATABASE CREATION HANDLING
+fs.open(`database.json`,'r',function(err, fd){
+    if (err) {
+        console.log("PROCESS | No database found! Creating a new one...");
+        fs.writeFile(`database.json`, '', function(err) {
+            if(err) {
+                console.log(err);
+            }
+            console.log("PROCESS | Database creation complete!");
+        });
+    } else {
+        if (process.argv[2] !== '--restarted') console.log("PROCESS | Database found!");
+    }
+});
 
 // DISCORD CLIENT HANDLING
 const bot = new Discord.Client({
@@ -22,6 +38,7 @@ var guild;
 bot.commands = new Discord.Collection();
 bot.aliases = new Discord.Collection();
 bot.cooldown = new Discord.Collection();
+bot.functions = new Discord.Collection();
 for (const file of fs.readdirSync('./commands').filter(file => file.endsWith('.js'))) {
     const command = require(`./commands/${file}`);
     bot.commands.set(command.name, command);

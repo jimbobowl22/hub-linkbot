@@ -1,5 +1,5 @@
 const Discord = require('discord.js');
-const editJson = require('edit-json-file');
+const editJsonFile = require('edit-json-file');
 const fs = require('fs');
 module.exports = {
 	name: 'restart',
@@ -23,7 +23,7 @@ module.exports = {
                         console.log(err);
                     }
                     // console.log("PROCESS | Writing the Restart Information...");
-                    var restartData = editJson(`restart.json`, {
+                    var restartData = editJsonFile(`restart.json`, {
                         autosave: true
                     });
                     restartData.set('initialized', Date.now())
@@ -43,7 +43,7 @@ module.exports = {
                 });
             } else {
                 // console.log("PROCESS | Re-writing the Restart Information...");
-                var restartData = editJson(`restart.json`, {
+                var restartData = editJsonFile(`restart.json`, {
                     autosave: true
                 });
                 restartData.set('initialized', Date.now())
