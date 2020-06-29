@@ -142,7 +142,7 @@ app.get('/', async (request, response) => {
 });
 app.get('/user/:robloxid', async (request, response) => {
     response.status(200);
-    response.json({ status: 'ok', running: true })
+    response.json({ status: 'error', error: 'Not found' })
 });
 app.use(async (request, response, next) => {
     response.status(404)
