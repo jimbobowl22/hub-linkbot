@@ -2,23 +2,24 @@
 This whitelisting bot is made for ROBLOX Tech Groups to use in their Discord Servers. It will help deliver products through web requests and store data of users.
 
 ## Installation
-To install this Discord Bot, you will need:
+To install this Discord Bot, you will need to do the following:
 
-1. A VPS, or a computer to host this locally. (Please note that Heroku will not work, as we are writing files that should be persistant, and Heroku rebuilds around every 24 hours.)
-2. [Node.js](https://nodejs.org/en/)
+1. Obtain a VPS, or a computer to host this locally. (Please note that Heroku will not work, as we are writing files that should be persistant, and Heroku rebuilds around every 24 hours.)
+2. Ensure it has the [Node.js](https://nodejs.org/en/) engine installed.
+3. Clone this repository with `git clone https://github.com/jdwoj5/hub-linkbot`
+4. Create a file named `.env`, which is where we will store crucial information. 
+   - Paste the following into your `.env` file:
+    ```env
+    # BOT CONFIGURATION
+    BOT_TOKEN=
+    BOT_PREFIX=!
+    BOT_PRIMARYGUILD=
 
-Then clone the repository and create a file names `.env`. This is where we will store crucial information. Paste the following into your `.env` file:
-```
-# BOT CONFIGURATION
-BOT_TOKEN=
-BOT_PREFIX=!
-BOT_PRIMARYGUILD=
+    # WEB CONFIGURATION
+    HUB_ACCESSPORT=3500
 
-# WEB CONFIGURATION
-HUB_ACCESSPORT=3500
-
-# KEYS
-```
+    # KEYS
+    ```
 
 ## Running the Bot
 To initialize the bot, run the following commands in the cloned directory to set up the bot:
