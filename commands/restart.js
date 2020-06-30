@@ -5,8 +5,10 @@ module.exports = {
 	name: 'restart',
 	description: 'Restarts the bot, updating all the code with it.',
 	arguments: [],
-    guildOnly: false,
-    userPermissions: [],
+    guildOnly: true,
+    userPermissions: [
+        'MANAGE_SERVER'
+    ],
     clientPermissions: [],
     cooldown: 30,
 	run: async (bot, message, args) => {
@@ -22,7 +24,6 @@ module.exports = {
                     if(err) {
                         console.log(err);
                     }
-                    // console.log("PROCESS | Writing the Restart Information...");
                     var restartData = editJsonFile(`restart.json`, {
                         autosave: true
                     });
@@ -42,7 +43,6 @@ module.exports = {
                     process.exit(2)
                 });
             } else {
-                // console.log("PROCESS | Re-writing the Restart Information...");
                 var restartData = editJsonFile(`restart.json`, {
                     autosave: true
                 });

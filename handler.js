@@ -8,12 +8,16 @@ const fs = require('fs');
 const express = require('express');
 const rateLimit = require("express-rate-limit");
 const editJsonFile = require('edit-json-file');
+const { v5: uuid } = require('uuid');
+const rbx = require('noblox.js');
+var http = require('http');
+var https = require('https');
 
 // DATABASE CREATION HANDLING
 fs.open(`database.json`,'r',function(err, fd){
     if (err) {
         console.log("PROCESS | No database found! Creating a new one...");
-        fs.writeFile(`database.json`, '', function(err) {
+        fs.writeFile(`database.json`, '{}', function(err) {
             if(err) {
                 console.log(err);
             }
@@ -48,32 +52,6 @@ for (const file of fs.readdirSync('./commands').filter(file => file.endsWith('.j
         }
     }
 }
-bot.on('ready', async () => {
-    guild = bot.guilds.cache.get(process.env.BOT_PRIMARYGUILD);
-    if (process.argv[2] !== '--restarted') console.info('DISCORD | Online!');
-    
-    // PROCESS RESTARTED HANDLING
-    async function handleRestart() {
-        fs.readFile('restart.json', 'utf8', async function (err, data) {
-            if (err) console.log('PROCESS | Restarted, but no Restart Information was found!')
-            else {
-                let information = JSON.parse(data);
-                let channel = await bot.channels.fetch(information.messageChannel)
-                let msg = await channel.messages.fetch(information.message)
-                let ThisEmbed = new Discord.MessageEmbed()
-                    .setAuthor(information.author.username, information.author.displayAvatarURL)
-                    .setTitle('**Restart Information**')
-                    .addField('Restart Status', ':white_check_mark: **Complete!**')
-                    .addField('Restart Time', (Date.now() - information.initialized) / 1000 + ' seconds')
-                    .setThumbnail(information.author.guildIcon)
-                await msg.edit(ThisEmbed)
-                console.log('PROCESS | Restarted!')
-                fs.unlinkSync('restart.json') 
-            } 
-        });
-    }
-    if (process.argv[2] == '--restarted') handleRestart()
-});
 bot.on('error', async (error) => {
     console.log(`DISCORD | Error ${error.name}: ${error.message} \n(File: ${error.fileName}, Line: ${error.lineNumber})\n${error.stack}`)
 })
@@ -141,7 +119,6 @@ bot.on('message', async (message) => {
     }
     command.run(bot, message, args)
 });
-bot.login(process.env.BOT_TOKEN)
 
 // WEBAPP HANDLING
 const app = express();
@@ -158,15 +135,58 @@ app.get('/', async (request, response) => {
     response.json({ status: 'ok', running: true })
 });
 app.get('/user/:robloxid', async (request, response) => {
-    response.status(200);
-    response.json({ status: 'error', error: 'Not found' })
+    var database = editJsonFile('database.json', {autosave: true})
+    var NotFound = false
+    let robloxUser = await rbx.getPlayerInfo(request.params.robloxid)
+        .catch(err => {if (err) {NotFound = true}})
+    if (robloxUser && NotFound == false) {
+        let users = database.get('users')
+        if (users) {
+            let entries = Object.entries(users)
+            let set = entries.find(u => u[1].robloxId == request.params.robloxid)
+            if (set) {
+                let index = set[0]
+                let value = set[1]
+                response.status(200);
+                response.json({ status: 'ok', value: value })
+                return
+            }
+        } 
+        function randomString(length, chars) {
+            var mask = '';
+            if (chars.indexOf('a') > -1) mask += 'abcdefghijklmnopqrstuvwxyz';
+            if (chars.indexOf('A') > -1) mask += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            if (chars.indexOf('#') > -1) mask += '0123456789';
+            if (chars.indexOf('!') > -1) mask += '~`!@#$%^&*()_+-={}[]:";\'<>?,./|\\';
+            var result = '';
+            for (var i = length; i > 0; --i) result += mask[Math.floor(Math.random() * mask.length)];
+            var links = database.get('users')
+            if (links) if (Object.values(links).find(k => {if (k.verify.status == 'link') {return k.verify.value == result} else {return false}})) return randomString(length, chars)
+            return result;
+        }
+        let linkCode = randomString(6, 'a#');
+        let index = uuid(request.params.robloxid, process.env.UUID_NAMESPACE);
+        let value = {
+            uuid: index,
+            robloxId: request.params.robloxId,
+            robloxUsername: robloxUser.username,
+            verify: {
+                status: 'link',
+                value: linkCode
+            },
+            products: {}
+        }
+        database.set('users.'+index, value)
+        response.status(200);
+        response.json({ status: 'ok', value: value })
+    } else {
+        response.status(404);
+        response.json({ status: 'error', error: 'Not found' })
+    }
 });
 app.use(async (request, response, next) => {
     response.status(404)
     response.json({ status: 'error', error: 'Path not found'})
-});
-const listener = app.listen(process.env.HUB_ACCESSPORT || 8080, async () => {
-    if (process.argv[2] !== '--restarted') console.info('WEB | Online!');
 });
 
 // PROCESS EXIT HANDLING
@@ -185,3 +205,39 @@ process.on('SIGINT', exitHandler.bind(null, {exit:true}));
 process.on('SIGUSR1', exitHandler.bind(null, {exit:true}));
 process.on('SIGUSR2', exitHandler.bind(null, {exit:true}));
 process.on('uncaughtException', exitHandler.bind(null, {exit:true}));
+
+// FULL SYSTEM LOGIN
+var listener;
+bot.on('ready', async () => {
+    listener = http.createServer(app).listen(process.env.HUB_ACCESSPORT)
+    if (process.argv[2] !== '--restarted') console.info('WEB | Online!');
+    guild = bot.guilds.cache.get(process.env.BOT_PRIMARYGUILD);
+    if (!guild) {
+        console.log('DISCORD | Not in Primary Guild! Crashing...')
+    }
+    if (process.argv[2] !== '--restarted') console.info('DISCORD | Online!');
+    
+    // PROCESS RESTARTED HANDLING
+    async function handleRestart() {
+        fs.readFile('restart.json', 'utf8', async function (err, data) {
+            if (err) console.log('PROCESS | Restarted, but no Restart Information was found!')
+            else {
+                let information = JSON.parse(data);
+                let channel = await bot.channels.fetch(information.messageChannel)
+                let msg = await channel.messages.fetch(information.message)
+                let ThisEmbed = new Discord.MessageEmbed()
+                    .setAuthor(information.author.username, information.author.displayAvatarURL)
+                    .setTitle('**Restart Information**')
+                    .addField('Restart Status', ':white_check_mark: **Complete!**')
+                    .addField('Restart Time', (Date.now() - information.initialized) / 1000 + ' seconds')
+                    .setThumbnail(information.author.guildIcon)
+                await msg.edit(ThisEmbed)
+                console.log('PROCESS | Restarted!')
+                fs.unlinkSync('restart.json') 
+            } 
+        });
+    }
+    if (process.argv[2] == '--restarted') handleRestart()
+    else console.info('PROCESS | Started!')
+});
+bot.login(process.env.BOT_TOKEN)

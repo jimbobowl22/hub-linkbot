@@ -5,7 +5,9 @@ module.exports = {
 	arguments: [],
     guildOnly: false,
     userPermissions: [],
-    clientPermissions: [],
+    clientPermissions: [
+        'SEND_MESSAGES'
+    ],
     cooldown: 2,
 	run: async (bot, message, args) => {
         let Loading = new Discord.MessageEmbed()

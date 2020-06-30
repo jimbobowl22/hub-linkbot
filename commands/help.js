@@ -5,7 +5,9 @@ module.exports = {
 	arguments: [],
     guildOnly: false,
     userPermissions: [],
-    clientPermissions: [],
+    clientPermissions: [
+        'SEND_MESSAGES'
+    ],
     cooldown: 5,
 	run: async (bot, message, args) => {
         let ThisEmbed = new Discord.MessageEmbed()
