@@ -147,8 +147,9 @@ app.get('/user/:robloxid', async (request, response) => {
             if (set) {
                 let index = set[0]
                 let value = set[1]
+                if (database.get('users.'+index+'.robloxUsername') !== robloxUser.username) database.set('users.'+index+'.robloxUsername', robloxUser.username)
                 response.status(200);
-                response.json({ status: 'ok', value: value })
+                response.json({ status: 'ok', index: index, value: value })
                 return
             }
         } 
@@ -167,8 +168,7 @@ app.get('/user/:robloxid', async (request, response) => {
         let linkCode = randomString(6, 'a#');
         let index = uuid(request.params.robloxid, process.env.UUID_NAMESPACE);
         let value = {
-            uuid: index,
-            robloxId: request.params.robloxId,
+            robloxId: request.params.robloxid,
             robloxUsername: robloxUser.username,
             verify: {
                 status: 'link',
@@ -178,7 +178,7 @@ app.get('/user/:robloxid', async (request, response) => {
         }
         database.set('users.'+index, value)
         response.status(200);
-        response.json({ status: 'ok', value: value })
+        response.json({ status: 'ok', index: index, value: value })
     } else {
         response.status(404);
         response.json({ status: 'error', error: 'Not found' })
