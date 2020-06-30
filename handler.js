@@ -218,7 +218,7 @@ bot.on('ready', async () => {
     if (process.argv[2] !== '--restarted') console.info('DISCORD | Online!');
     
     // PROCESS RESTARTED HANDLING
-    async function handleRestart() {
+    if (process.argv[2] == '--restarted') {
         fs.readFile('restart.json', 'utf8', async function (err, data) {
             if (err) console.log('PROCESS | Restarted, but no Restart Information was found!')
             else {
@@ -228,8 +228,8 @@ bot.on('ready', async () => {
                 let ThisEmbed = new Discord.MessageEmbed()
                     .setAuthor(information.author.username, information.author.displayAvatarURL)
                     .setTitle('**Restart Information**')
-                    .addField('Restart Status', ':white_check_mark: **Complete!**')
-                    .addField('Restart Time', (Date.now() - information.initialized) / 1000 + ' seconds')
+                    .addField('Restart Status', ':white_check_mark: **Complete!**', true)
+                    .addField('Restart Time', (Date.now() - information.initialized) / 1000 + ' seconds', true)
                     .setThumbnail(information.author.guildIcon)
                 await msg.edit(ThisEmbed)
                 console.log('PROCESS | Restarted!')
@@ -237,7 +237,25 @@ bot.on('ready', async () => {
             } 
         });
     }
-    if (process.argv[2] == '--restarted') handleRestart()
-    else console.info('PROCESS | Started!')
+    else {
+        console.info('PROCESS | Started!')
+        fs.readFile('restart.json', 'utf8', async function (err, data) {
+            if (err) return
+            else {
+                let information = JSON.parse(data);
+                let channel = await bot.channels.fetch(information.messageChannel)
+                let msg = await channel.messages.fetch(information.message)
+                let ThisEmbed = new Discord.MessageEmbed()
+                    .setAuthor(information.author.username, information.author.displayAvatarURL)
+                    .setTitle('**Restart Information**')
+                    .addField('Restart Status', ':white_check_mark: **Manual restart complete!**', true)
+                    .addField('Error Response Time', require('ms')(Date.now() - information.initialized), true)
+                    .setThumbnail(information.author.guildIcon)
+                await msg.edit(ThisEmbed)
+                console.log('PROCESS | Corrected restart information!')
+                fs.unlinkSync('restart.json') 
+            } 
+        });
+    }
 });
 bot.login(process.env.BOT_TOKEN)

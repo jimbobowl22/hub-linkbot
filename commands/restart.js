@@ -7,7 +7,7 @@ module.exports = {
 	arguments: [],
     guildOnly: true,
     userPermissions: [
-        'MANAGE_SERVER'
+        'MANAGE_GUILD'
     ],
     clientPermissions: [],
     cooldown: 30,
@@ -15,7 +15,7 @@ module.exports = {
         let Loading = new Discord.MessageEmbed()
             .setAuthor(message.author.username, message.author.displayAvatarURL())
             .setTitle('**Restart Information**')
-            .addField('Restart Status', ':hourglass_flowing_sand: **Processing...**')
+            .addField('Restart Status', ':hourglass_flowing_sand: **Processing...**', true)
             .setThumbnail(message.guild.iconURL())
         let m = await message.channel.send(Loading)
         fs.open(`restart.json`,'r',function(err, fd){

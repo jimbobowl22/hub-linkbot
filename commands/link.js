@@ -27,8 +27,8 @@ module.exports = {
                 let ThisEmbed = new Discord.MessageEmbed()
                     .setAuthor(message.author.username, message.author.displayAvatarURL())
                     .setTitle('**Link Information**')
-                    .addField('Status', ':white_check_mark: **Complete!**')
-                    .addField('Linked to', value.robloxUsername)
+                    .addField('Status', ':white_check_mark: **Complete!**', true)
+                    .addField('Linked to', value.robloxUsername, true)
                     .setThumbnail(message.guild.iconURL())
                 await message.channel.send(ThisEmbed)
                 return
@@ -37,8 +37,8 @@ module.exports = {
         let ThisEmbed = new Discord.MessageEmbed()
             .setAuthor(message.author.username, message.author.displayAvatarURL())
             .setTitle('**Link Information**')
-            .addField('Status', ':x: **Incomplete!**')
-            .addField('Error', 'Not a Link Code.')
+            .addField('Status', ':x: **Incomplete!**', true)
+            .addField('Error', 'Not a Link Code.', true)
             .setThumbnail(message.guild.iconURL())
         await message.channel.send(ThisEmbed)
 	}
