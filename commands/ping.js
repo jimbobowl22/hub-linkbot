@@ -4,7 +4,9 @@ module.exports = {
 	description: 'Displays the information about the bot\'s latency.',
 	arguments: [],
     guildOnly: false,
-    userPermissions: [],
+    userPermissions: [
+        'MANAGE_GUILD'
+    ],
     clientPermissions: [
         'SEND_MESSAGES'
     ],
