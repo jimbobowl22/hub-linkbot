@@ -10,7 +10,7 @@ module.exports = {
         'MANAGE_GUILD'
     ],
     clientPermissions: [],
-    cooldown: 30,
+    cooldown: 10,
 	run: async (bot, message, args) => {
         let Loading = new Discord.MessageEmbed()
             .setAuthor(message.author.username, message.author.displayAvatarURL())

@@ -42,7 +42,17 @@ var guild;
 bot.commands = new Discord.Collection();
 bot.aliases = new Discord.Collection();
 bot.cooldown = new Discord.Collection();
-bot.functions = new Discord.Collection();
+bot.functions = {
+    updateMember: async (id) => {
+
+    },
+    giveProduct: async (product, id) => {
+
+    },
+    revokeProduct: async (product, id) => {
+
+    }
+}
 for (const file of fs.readdirSync('./commands').filter(file => file.endsWith('.js'))) {
     const command = require(`./commands/${file}`);
     bot.commands.set(command.name, command);
@@ -103,19 +113,27 @@ bot.on('message', async (message) => {
         }
     }
     if (command.cooldown) {
-        if (bot.cooldown.get(`${command.name}-${message.author.id}`)) {
+        let current = bot.cooldown.get(`${command.name}-${message.author.id}`)
+        if (!isNaN(current) && current > 0) {
             let ThisEmbed = new Discord.MessageEmbed()
                 .setAuthor(message.author.username, message.author.displayAvatarURL())
                 .setTitle('**Cooldown**')
-                .setDescription('Please wait `'+command.cooldown+'` seconds.')
+                .setDescription('Please wait `'+current+'` seconds.')
                 .setThumbnail(message.guild.iconURL())
             await message.channel.send(ThisEmbed)
             return
+        } else {
+            bot.cooldown.set(`${command.name}-${message.author.id}`, command.cooldown);
+            let cooldown = setInterval(async () => {
+                let thecurrent = bot.cooldown.get(`${command.name}-${message.author.id}`)
+                if (thecurrent <= 0) {
+                    bot.cooldown.set(`${command.name}-${message.author.id}`, 0);
+                    clearInterval(cooldown)
+                    return
+                }
+                bot.cooldown.set(`${command.name}-${message.author.id}`, thecurrent - 0.5);
+            }, 500)
         }
-        bot.cooldown.set(`${command.name}-${message.author.id}`, true);
-        setTimeout(() => {
-            bot.cooldown.set(`${command.name}-${message.author.id}`, false);
-        }, command.cooldown * 1000)
     }
     command.run(bot, message, args)
 });

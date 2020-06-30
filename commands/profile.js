@@ -13,7 +13,7 @@ module.exports = {
     clientPermissions: [
         'SEND_MESSAGES'
     ],
-    cooldown: 2,
+    cooldown: 5,
 	run: async (bot, message, args) => {
         var database = editJsonFile('database.json', {autosave: true})
         let users = database.get('users')
@@ -49,7 +49,7 @@ module.exports = {
                     .setTitle('**Profile Information**')
                     .addField('ROBLOX', `Username: \`${value.robloxUsername}\`\nID: \`${value.robloxId}\``, true)
                     .addField('Discord', `ID: \`${value.verify.value}\``, true)
-                    .setThumbnail(message.guild.iconURL())
+                    .setThumbnail(guild.iconURL())
                 if (finalProductEmbed.length > 0) ThisEmbed.addField('Products', finalProductEmbed.join('\n'), true)
                 await message.channel.send(ThisEmbed)
                 return

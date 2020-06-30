@@ -13,8 +13,9 @@ module.exports = {
     clientPermissions: [
         'SEND_MESSAGES'
     ],
-    cooldown: 5,
+    cooldown: 10,
 	run: async (bot, message, args) => {
+        let guild = bot.guilds.cache.get(process.env.BOT_PRIMARYGUILD)
         var database = editJsonFile('database.json', {autosave: true})
         let users = database.get('users')
         if (users) {
@@ -29,7 +30,7 @@ module.exports = {
                     .setTitle('**Link Information**')
                     .addField('Status', ':white_check_mark: **Complete!**', true)
                     .addField('Linked to', value.robloxUsername, true)
-                    .setThumbnail(message.guild.iconURL())
+                    .setThumbnail(guild.iconURL())
                 await message.channel.send(ThisEmbed)
                 return
             }
@@ -39,7 +40,7 @@ module.exports = {
             .setTitle('**Link Information**')
             .addField('Status', ':x: **Incomplete!**', true)
             .addField('Error', 'Not a Link Code.', true)
-            .setThumbnail(message.guild.iconURL())
+            .setThumbnail(guild.iconURL())
         await message.channel.send(ThisEmbed)
 	}
 };
