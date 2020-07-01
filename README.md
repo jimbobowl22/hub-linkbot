@@ -39,7 +39,7 @@ To initialize the bot, run the following commands in the cloned directory to set
 To start the bot, run the following command:
 - `node server.js`
 
-The bot will never need to come offline, as the `!restart` command restarts the whole process and updates the bot's code on it's own.
+The bot should never need to come offline, as the `!restart` command restarts the whole process and updates the bot's code on it's own. Most errors will also be caught with this command, prompting you to update the code and restart the bot yourself.
 
 ## Connecting to your Hub
 There are many ways to trigger functions in the Discord Bot from HTTP requests, but the most important thing to do is to write down the IP at which you are running this Discord Bot and write down the `HUB_ACCESSPORT` that you put in the `.env` file. This information will be referenced multiple times from the scripts in your ROBLOX Product Hub.
