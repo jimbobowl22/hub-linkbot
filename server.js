@@ -10,8 +10,8 @@ const bot = new Discord.Client({
     presence: {
         status: 'dnd',
         activity: {
-            name: 'the Error Response.',
-            type: 'WATCHING'
+            name: 'with ERR Handling.',
+            type: 'PLAYING'
         }
     }
 })

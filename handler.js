@@ -79,7 +79,7 @@ bot.on('message', async (message) => {
             .setTitle('**Command is Guild Only**')
             .setDescription('Please run `'+process.env.BOT_PREFIX+index+args.map(a => ' '+a)+'` in the Discord Server.')
             .setThumbnail(guild.iconURL())
-        await message.channel.send(ThisEmbed)
+        await message.channel.send(ThisEmbed).then(m => m.delete({timeout: 3000}))
         return
     }
     if (message.guild) {
@@ -120,7 +120,7 @@ bot.on('message', async (message) => {
                 .setTitle('**Cooldown**')
                 .setDescription('Please wait `'+current+'` seconds.')
                 .setThumbnail(message.guild.iconURL())
-            await message.channel.send(ThisEmbed)
+            await message.channel.send(ThisEmbed).then(m => m.delete({timeout: 3000}))
             return
         } else {
             bot.cooldown.set(`${command.name}-${message.author.id}`, command.cooldown);
@@ -135,7 +135,7 @@ bot.on('message', async (message) => {
             }, 500)
         }
     }
-    command.run(bot, message, args)
+    await command.run(bot, message, args)
 });
 
 // WEBAPP HANDLING

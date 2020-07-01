@@ -31,8 +31,8 @@ To install this Discord Bot, you will need to do the following:
 
 ## Running the Bot
 To initialize the bot, run the following commands in the cloned directory to set up the bot:
-- `npm update`
-- `npm install`
+1. `npm update`
+2. `npm install`
 
 To start the bot, run the following command:
 - `node server.js`
