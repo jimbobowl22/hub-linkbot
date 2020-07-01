@@ -1,4 +1,4 @@
-# Open Source Whitelist Bot
+# Hub Whitelist Bot (jdwoj5)
 This whitelisting bot is made for ROBLOX Tech Groups to use in their Discord Servers. It will help deliver products through web requests and store data of users.
 
 ## Installation
