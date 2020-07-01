@@ -25,6 +25,7 @@ bot.on('ready', async () => {
             let channel = await bot.channels.fetch(information.messageChannel)
             let msg = await channel.messages.fetch(information.message)
             let ThisEmbed = new Discord.MessageEmbed()
+                .setColor(Number(process.env.BOT_EMBEDCOLOR))
                 .setAuthor(information.author.username, information.author.displayAvatarURL)
                 .setTitle('**Restart Information**')
                 .addField('Restart Status', ':x: **Error found! Manual Restart required.**')

@@ -26,6 +26,7 @@ module.exports = {
                 let value = set[1]
                 database.set('users.'+index+'.verify', {status:'complete',value:message.author.id})
                 let ThisEmbed = new Discord.MessageEmbed()
+                    .setColor(Number(process.env.BOT_EMBEDCOLOR))
                     .setAuthor(message.author.username, message.author.displayAvatarURL())
                     .setTitle('**Link Information**')
                     .addField('Status', ':white_check_mark: **Complete!**', true)
@@ -36,6 +37,7 @@ module.exports = {
             }
         } 
         let ThisEmbed = new Discord.MessageEmbed()
+            .setColor(Number(process.env.BOT_EMBEDCOLOR))
             .setAuthor(message.author.username, message.author.displayAvatarURL())
             .setTitle('**Link Information**')
             .addField('Status', ':x: **Incomplete!**', true)

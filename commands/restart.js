@@ -13,6 +13,7 @@ module.exports = {
     cooldown: 10,
 	run: async (bot, message, args) => {
         let Loading = new Discord.MessageEmbed()
+            .setColor(Number(process.env.BOT_EMBEDCOLOR))
             .setAuthor(message.author.username, message.author.displayAvatarURL())
             .setTitle('**Restart Information**')
             .addField('Restart Status', ':hourglass_flowing_sand: **Processing...**', true)

@@ -12,6 +12,7 @@ To install this Discord Bot, you will need to do the following:
     - Paste the following into your `.env` file:
     ```env
     # BOT CONFIGURATION
+    BOT_EMBEDCOLOR=
     BOT_TOKEN=
     BOT_PREFIX=
     BOT_PRIMARYGUILD=
@@ -23,6 +24,7 @@ To install this Discord Bot, you will need to do the following:
     UUID_NAMESPACE=
     ```
     - Input your `.env` information as shown below:
+        - `BOT_EMBEDCOLOR` Set this to the color [(in decimal value)](https://spycolor.com/) you wish your embeds to have. (Recommended: `2303786`)
         - `BOT_TOKEN` Set this to your bot token as found in the Bot section of your [Discord Application](https://discord.com/developers/applications).
         - `BOT_PREFIX` Set this to your preferred bot prefix. (Recommended: `!`)
         - `BOT_PRIMARYGUILD` Set this to the ID of the Server you would like to use the bot in.

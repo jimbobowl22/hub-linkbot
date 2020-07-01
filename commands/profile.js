@@ -41,21 +41,22 @@ module.exports = {
             if (set) {
                 let index = set[0]
                 let value = set[1]
-                let products = Object.entries(value.products)
-                var finalProductEmbed = []
-                products.forEach(v => finalProductEmbed.push('**'+v[1].fullName+'**'))
+                let finalProduct = [];
+                value.products.forEach((v)=>{let name=database.get('products.'+v);if(name)finalProduct.push(`**${name}** \`${v}\``)})
                 let ThisEmbed = new Discord.MessageEmbed()
+                    .setColor(Number(process.env.BOT_EMBEDCOLOR))
                     .setAuthor(message.author.username, message.author.displayAvatarURL())
                     .setTitle('**Profile Information**')
                     .addField('ROBLOX', `Username: \`${value.robloxUsername}\`\nID: \`${value.robloxId}\``, true)
                     .addField('Discord', `ID: \`${value.verify.value}\``, true)
                     .setThumbnail(guild.iconURL())
-                if (finalProductEmbed.length > 0) ThisEmbed.addField('Products', finalProductEmbed.join('\n'), true)
+                if (finalProduct.length > 0) ThisEmbed.addField('Products',  finalProduct.join('\n'), true)
                 await message.channel.send(ThisEmbed)
                 return
             }
         } 
         let ThisEmbed = new Discord.MessageEmbed()
+            .setColor(Number(process.env.BOT_EMBEDCOLOR))
             .setAuthor(message.author.username, message.author.displayAvatarURL())
             .setTitle('**Profile Information**')
             .addField('Error', ':x: **Not found!**')

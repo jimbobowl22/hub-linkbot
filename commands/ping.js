@@ -14,6 +14,7 @@ module.exports = {
 	run: async (bot, message, args) => {
         let guild = bot.guilds.cache.get(process.env.BOT_PRIMARYGUILD)
         let Loading = new Discord.MessageEmbed()
+            .setColor(Number(process.env.BOT_EMBEDCOLOR))
             .setAuthor(message.author.username, message.author.displayAvatarURL())
             .setTitle('**Ping Information**')
             .addField('Status', ':hourglass_flowing_sand: **Processing...**', true)
@@ -21,6 +22,7 @@ module.exports = {
         let currently = new Date(Date.now())
 		let m = await message.channel.send(Loading)
         let ThisEmbed = new Discord.MessageEmbed()
+            .setColor(Number(process.env.BOT_EMBEDCOLOR))
             .setAuthor(message.author.username, message.author.displayAvatarURL())
             .setTitle('**Ping Information**')
             .addField('Status', ':white_check_mark: **Fetched!**', true)

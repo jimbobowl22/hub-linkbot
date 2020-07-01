@@ -12,6 +12,7 @@ module.exports = {
 	run: async (bot, message, args) => {
         let guild = bot.guilds.cache.get(process.env.BOT_PRIMARYGUILD)
         let ThisEmbed = new Discord.MessageEmbed()
+            .setColor(Number(process.env.BOT_EMBEDCOLOR))
             .setAuthor(message.author.username, message.author.displayAvatarURL())
             .setTitle('**Help Information**')
             .addField('Description', 'This bot is used to deliver products to users who buy them. It is also used for account linking and to get user information.', true)

@@ -75,6 +75,7 @@ bot.on('message', async (message) => {
     if (!command) return
     if (command.guildOnly && !message.guild) {
         let ThisEmbed = new Discord.MessageEmbed()
+            .setColor(Number(process.env.BOT_EMBEDCOLOR))
             .setAuthor(message.author.username, message.author.displayAvatarURL())
             .setTitle('**Command is Guild Only**')
             .setDescription('Please run `'+process.env.BOT_PREFIX+index+args.map(a => ' '+a)+'` in the Discord Server.')
@@ -90,6 +91,7 @@ bot.on('message', async (message) => {
         }
         if (matching.length > 0) {
             let ThisEmbed = new Discord.MessageEmbed()
+                .setColor(Number(process.env.BOT_EMBEDCOLOR))
                 .setAuthor(message.author.username, message.author.displayAvatarURL())
                 .setTitle('**Permission denied**')
                 .setDescription('You are missing the following permissions: '+matching.join(', '))
@@ -104,6 +106,7 @@ bot.on('message', async (message) => {
         }
         if (matching.length > 0) {
             let ThisEmbed = new Discord.MessageEmbed()
+                .setColor(Number(process.env.BOT_EMBEDCOLOR))
                 .setAuthor(message.author.username, message.author.displayAvatarURL())
                 .setTitle('**Insufficient Guild Permissions**')
                 .setDescription('I am missing the following permissions: '+matching.join(', '))
@@ -116,6 +119,7 @@ bot.on('message', async (message) => {
         let current = bot.cooldown.get(`${command.name}-${message.author.id}`)
         if (!isNaN(current) && current > 0) {
             let ThisEmbed = new Discord.MessageEmbed()
+                .setColor(Number(process.env.BOT_EMBEDCOLOR))
                 .setAuthor(message.author.username, message.author.displayAvatarURL())
                 .setTitle('**Cooldown**')
                 .setDescription('Please wait `'+current+'` seconds.')
@@ -192,7 +196,7 @@ app.get('/user/:robloxid', async (request, response) => {
                 status: 'link',
                 value: linkCode
             },
-            products: {}
+            products: []
         }
         database.set('users.'+index, value)
         response.status(200);
@@ -244,6 +248,7 @@ bot.on('ready', async () => {
                 let channel = await bot.channels.fetch(information.messageChannel)
                 let msg = await channel.messages.fetch(information.message)
                 let ThisEmbed = new Discord.MessageEmbed()
+                    .setColor(Number(process.env.BOT_EMBEDCOLOR))
                     .setAuthor(information.author.username, information.author.displayAvatarURL)
                     .setTitle('**Restart Information**')
                     .addField('Restart Status', ':white_check_mark: **Complete!**', true)
@@ -264,6 +269,7 @@ bot.on('ready', async () => {
                 let channel = await bot.channels.fetch(information.messageChannel)
                 let msg = await channel.messages.fetch(information.message)
                 let ThisEmbed = new Discord.MessageEmbed()
+                    .setColor(Number(process.env.BOT_EMBEDCOLOR))
                     .setAuthor(information.author.username, information.author.displayAvatarURL)
                     .setTitle('**Restart Information**')
                     .addField('Restart Status', ':white_check_mark: **Manual restart complete!**', true)
