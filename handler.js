@@ -1,6 +1,6 @@
 /*
     HUB-LINKBOT (jdwoj5)
-    Please view the README before getting started. (Please run node server.js when starting up the bot, not node bot.js.)
+    Please view the README before getting started. (Please run node server.js when starting up the bot, not node handler.js.)
 */
 require('dotenv').config();
 const Discord = require('discord.js');
@@ -98,7 +98,7 @@ for (const file of fs.readdirSync('./commands').filter(file => file.endsWith('.j
     }
 }
 bot.on('error', async (error) => {
-    console.log(`DISCORD | Error ${error.name}: ${error.message} \n(File: ${error.fileName}, Line: ${error.lineNumber})\n${error.stack}`)
+    console.log(error)
 })
 bot.on('message', async (message) => {
     if (message.author.bot) return
