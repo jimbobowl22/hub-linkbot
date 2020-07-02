@@ -59,13 +59,25 @@ bot.functions.sendFile = async (member, pid) => {
     return sent
 };
 bot.functions.updateMember = async (member) => {
+    let guild = member.guild
+    let roleResolved = guild.roles.cache.get(process.env.BOT_VERIFIEDROLEID)
+    if (!guild.me.hasPermission('MANAGE_ROLES', true)) return false
+    if (member.roles.highest.position >= guild.me.roles.highest.position) return false
+    if (roleResolved.position >= guild.me.roles.highest.position) return false
     var database = editJsonFile('database.json', {autosave: true})
-    let guild = bot.guilds.cache.get(process.env.BOT_PRIMARYGUILD)
     let users = database.get('users')
     let format = Object.entries(users)
     let the = format.find(u => {if (u[1].verify.status == 'complete') {return u[1].verify.value == member.user.id} else {return false}})
-    if (the) member.roles.add(guild.roles.cache.get(process.env.BOT_VERIFIEDROLEID))
-    else member.roles.add(guild.roles.cache.get(process.env.BOT_VERIFIEDROLEID))
+    if (the) {
+        var NotFound = false
+        let robloxUser = await rbx.getPlayerInfo(the[1].robloxId)
+            .catch(err => {if (err) {NotFound = true}})
+        if (NotFound) return false
+        if (database.get('users.'+the[0]+'.robloxUsername') || database.get('users.'+the[0]+'.robloxUsername') !== robloxUser.username) database.set('users.'+the[0]+'.robloxUsername', robloxUser.username)
+        if (!member.roles.cache.get(process.env.BOT_VERIFIEDROLEID)) await member.roles.add(roleResolved); 
+        return robloxUser.username
+    }
+    else {if (member.roles.cache.get(process.env.BOT_VERIFIEDROLEID)) await member.roles.remove(roleResolved); return false}
 };
 bot.functions.giveProduct = async (member, pid) => {
     var database = editJsonFile('database.json', {autosave: true})
@@ -97,9 +109,6 @@ for (const file of fs.readdirSync('./commands').filter(file => file.endsWith('.j
         }
     }
 }
-bot.on('error', async (error) => {
-    console.log(error)
-})
 bot.on('message', async (message) => {
     if (message.author.bot) return
     if (!message.content.startsWith(process.env.BOT_PREFIX)) return
@@ -176,6 +185,12 @@ bot.on('message', async (message) => {
     }
     await command.run(bot, message, args)
 });
+bot.on('guildMemberAdd', async (member) => {
+    await bot.functions.updateMember(member)
+})
+bot.on('error', async (error) => {
+    console.log(error)
+})
 
 // WEBAPP HANDLING
 const app = express();
@@ -351,7 +366,6 @@ process.on('uncaughtException', exitHandler.bind(null, {exit:true}));
 
 // FULL SYSTEM LOGIN
 bot.on('ready', async () => {
-    if (process.argv[2] !== '--restarted') console.info('WEB | Online!');
     let guild = bot.guilds.cache.get(process.env.BOT_PRIMARYGUILD);
     let verifiedRole = guild.roles.cache.get(process.env.BOT_VERIFIEDROLEID);
     if (!guild) {
@@ -409,3 +423,4 @@ bot.on('ready', async () => {
 });
 bot.login(process.env.BOT_TOKEN);
 bot.httpServer = http.createServer(app).listen(process.env.HUB_ACCESSPORT)
+if (process.argv[2] !== '--restarted') console.info('WEB | Online!');
