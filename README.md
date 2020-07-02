@@ -43,6 +43,18 @@ To start the bot, run the following command:
 
 The bot should never need to come offline, as the `!restart` command restarts the whole process and updates the bot's code on it's own. Most errors will also be caught with this command, prompting you to update the code and restart the bot yourself.
 
+## Pre-Installed Commands
+Already added are many commands that can be used to manage the whitelist system and product creation. Here is a list of them:
+- `!createproduct` Creates a product.
+- `!deleteproduct` Deletes a product with its file.
+- `!help` Displays all the bot's commands and information.
+- `!link` Links your Discord Account to your Registered User with a code generated from the Hub.
+- `!ping` Displays the information about the bot's latency.
+- `!products` Displays all products.
+- `!profile` Displays all information stored about a user.
+- `!restart` Restarts the bot, updating all the code with it.
+- `!retrieve` Fetches a product file.
+
 ## Connecting to your Hub
 There are many ways to trigger functions in the Discord Bot from HTTP requests, but the most important thing to do is to write down the IP at which you are running this Discord Bot and write down the `HUB_ACCESSPORT` that you put in the `.env` file before coding with this hub. This information will be referenced multiple times from the scripts in your ROBLOX Product Hub.
 
