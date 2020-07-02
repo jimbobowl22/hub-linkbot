@@ -4,7 +4,7 @@ This whitelisting bot is made for ROBLOX Tech Groups to use in their Discord Ser
 ## Installation
 To install this Discord Bot, you will need to do the following:
 
-1. Obtain a VPS, or a computer to host this locally. (Please note that Heroku will not work, as we are writing files that should be persistant, and Heroku rebuilds around every 24 hours.)
+1. Obtain a VPS, or a computer to host this locally. (Please note that Heroku will not work, as we are writing files that should be persistant, and Heroku rebuilds around every 24 hours. Glitch also probably will not work, as Glitch requires requests to keep uptime, and this bot should be running almost 24/7.)
 2. Ensure it has the [Node.js](https://nodejs.org/en/) engine installed.
 3. Clone this repository with `git clone https://github.com/jdwoj5/hub-linkbot`
 4. Create a [Discord Application](https://discord.com/developers/applications) with a Bot created in the Bot Section.
