@@ -37,6 +37,7 @@ module.exports = {
                         guildIcon: message.guild.iconURL()
                     })
                     bot.destroy();
+                    bot.httpServer.close();
                     console.log('PROCESS | Restarting...')
                     process.exit(2)
                 });
@@ -53,6 +54,7 @@ module.exports = {
                     guildIcon: message.guild.iconURL()
                 })
                 bot.destroy();
+                bot.httpServer.close();
                 console.log('PROCESS | Restarting...')
                 process.exit(2)
             }

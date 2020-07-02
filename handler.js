@@ -38,7 +38,6 @@ const bot = new Discord.Client({
         }
     }
 });
-var guild;
 bot.commands = new Discord.Collection();
 bot.aliases = new Discord.Collection();
 bot.cooldown = new Discord.Collection();
@@ -60,7 +59,13 @@ bot.functions.sendFile = async (member, pid) => {
     return sent
 };
 bot.functions.updateMember = async (member) => {
-
+    var database = editJsonFile('database.json', {autosave: true})
+    let guild = bot.guilds.cache.get(process.env.BOT_PRIMARYGUILD)
+    let users = database.get('users')
+    let format = Object.entries(users)
+    let the = format.find(u => {if (u[1].verify.status == 'complete') {return u[1].verify.value == member.user.id} else {return false}})
+    if (the) member.roles.add(guild.roles.cache.get(process.env.BOT_VERIFIEDROLEID))
+    else member.roles.add(guild.roles.cache.get(process.env.BOT_VERIFIEDROLEID))
 };
 bot.functions.giveProduct = async (member, pid) => {
     var database = editJsonFile('database.json', {autosave: true})
@@ -333,6 +338,7 @@ app.use(async (request, response, next) => {
 process.stdin.resume();
 function exitHandler(options, exitCode) {
     if (bot.user) {
+        bot.httpServer.close();
         bot.destroy();
     }
     process.exit();
@@ -344,13 +350,17 @@ process.on('SIGUSR2', exitHandler.bind(null, {exit:true}));
 process.on('uncaughtException', exitHandler.bind(null, {exit:true}));
 
 // FULL SYSTEM LOGIN
-var listener;
 bot.on('ready', async () => {
-    listener = http.createServer(app).listen(process.env.HUB_ACCESSPORT)
     if (process.argv[2] !== '--restarted') console.info('WEB | Online!');
-    guild = bot.guilds.cache.get(process.env.BOT_PRIMARYGUILD);
+    let guild = bot.guilds.cache.get(process.env.BOT_PRIMARYGUILD);
+    let verifiedRole = guild.roles.cache.get(process.env.BOT_VERIFIEDROLEID);
     if (!guild) {
         console.log('DISCORD | Not in Primary Guild! Crashing...')
+        process.exit()
+    }
+    if (!verifiedRole) {
+        console.log('DISCORD | Verified Role not found! Crashing...')
+        process.exit()
     }
     if (process.argv[2] !== '--restarted') console.info('DISCORD | Online!');
     
@@ -397,4 +407,5 @@ bot.on('ready', async () => {
         });
     }
 });
-bot.login(process.env.BOT_TOKEN)
+bot.login(process.env.BOT_TOKEN);
+bot.httpServer = http.createServer(app).listen(process.env.HUB_ACCESSPORT)
