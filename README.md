@@ -73,8 +73,8 @@ This section is not recommended unless you know exactly what you are doing and h
 When encountering errors, the website will return something such as: `{"status":"error", "error":"errorMessage}`
 Most of the error messages are `User not found`, `Product not found`, and stuff like that. Feel free to take a look at the handler.js file to take a look at every error if you are looking into handling it through your Hub. (Line: 195)
 
-###### ROBLOX Web API Module (Pre-Written)
-**This section is coming soon.**
+###### ROBLOX Web API ModuleScript (Pre-Written)
+**If you would like to see this section added, please DM me on Discord:** `@jdwoj5#1132`
 
 ###### Checking the Whitelist
 Written below is a Whitelist Checker that you may use to check whitelists. Setting it up should be easy, but please ensure that this script is directly inside the main folder, as it will destroy the parent of the script when loading. It is recommended that all server-side code is stored in this whitelist script and this whitelist script is obfuscated, so that no one can remove this script and have it still run entirely.
