@@ -17,6 +17,7 @@ module.exports = {
             .setTitle('**Help Information**')
             .addField('Description', 'This bot is used to deliver products to users who buy them. It is also used for account linking and to get user information.', true)
             .addField('Commands', bot.commands.array().map(command => `**${process.env.BOT_PREFIX+command.name}**${command.arguments.map(a => ` \`${a.label}\``)} | *${command.description}*`).join('\n'), true)
+            .setFooter('This bot has been written by jdwoj5butbetter#1132.')
             .setThumbnail(guild.iconURL())
         await message.channel.send(ThisEmbed)
 	}

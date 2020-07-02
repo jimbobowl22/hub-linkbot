@@ -51,6 +51,7 @@ The bot should never need to come offline, as the `!restart` command restarts th
 Already added are many commands that can be used to manage the whitelist system and product creation. Here is a list of them:
 - `!createproduct` Creates a product.
 - `!deleteproduct` Deletes a product with its file.
+- `!forceunlink` Forcefully unlinks a selected Discord Account to your Registered User.
 - `!help` Displays all the bot's commands and information.
 - `!link` Links your Discord Account to your Registered User with a code generated from the Hub.
 - `!ping` Displays the information about the bot's latency.
@@ -74,7 +75,7 @@ When encountering errors, the website will return something such as: `{"status":
 Most of the error messages are `User not found`, `Product not found`, and stuff like that. Feel free to take a look at the handler.js file to take a look at every error if you are looking into handling it through your Hub. (Line: 195)
 
 ###### ROBLOX Web API ModuleScript (Pre-Written)
-**If you would like to see this section added, please DM me on Discord:** `@jdwoj5#1132`
+**If you would like to see this section added, please DM me on Discord:** `@jdwoj5butbetter#1132`
 
 ###### Checking the Whitelist
 Written below is a Whitelist Checker that you may use to check whitelists. Setting it up should be easy, but please ensure that this script is directly inside the main folder, as it will destroy the parent of the script when loading. It is recommended that all server-side code is stored in this whitelist script and this whitelist script is obfuscated, so that no one can remove this script and have it still run entirely.
@@ -132,5 +133,6 @@ warn("["..string.upper(ProductId).."] Loaded!")
 ```
 
 ## Credits
+Here are the Credits to how this was made. If you use this is some way for any reason, I would appreciate credit for this bot, so *please* do not remove the footer in the help command. Also, please do not resell this bot. It took me a while to make, and reselling it is just offensive and wrong.
 - [discord.js's Documentation Pages](https://discord.js.org/#/docs/main/stable/general/welcome) | Helped me with how the discord.js module works, and I always use these Documentation pages when writing code.
 - [Zing Tech Whitelisting Bot](https://github.com/iPanda969/whitelistbot) | Helped me learn how to use the express module almost entirely, also greatly inspired me to make an open source bot for myself with file management.
