@@ -42,17 +42,47 @@ var guild;
 bot.commands = new Discord.Collection();
 bot.aliases = new Discord.Collection();
 bot.cooldown = new Discord.Collection();
-bot.functions = {
-    updateMember: async (id) => {
+bot.functions = {};
+bot.functions.sendFile = async (member, pid) => {
+    var database = editJsonFile('database.json', {autosave: true})
+    let guild = bot.guilds.cache.get(process.env.BOT_PRIMARYGUILD)
+    let { name, path } = database.get('products.'+pid)
+    let ThisEmbed = new Discord.MessageEmbed()
+        .setColor(Number(process.env.BOT_EMBEDCOLOR))
+        .setAuthor(member.user.username, member.user.displayAvatarURL())
+        .setTitle('**Product Received**')
+        .addField('Product', name, true)
+        .setThumbnail(guild.iconURL())
+    var sent = true
+    await member.send(ThisEmbed).catch(err => sent = false)
+    let file = new Discord.MessageAttachment(path, member.user.id+'-'+pid+'.'+path.split('.')[path.split('.').length - 1])
+    await member.send(file).catch(err => sent = false)
+    return sent
+};
+bot.functions.updateMember = async (member) => {
 
-    },
-    giveProduct: async (product, id) => {
-
-    },
-    revokeProduct: async (product, id) => {
-
-    }
-}
+};
+bot.functions.giveProduct = async (member, pid) => {
+    var database = editJsonFile('database.json', {autosave: true})
+    let users = database.get('users')
+    let format = Object.entries(users)
+    let the = format.find(u => {if (u[1].verify.status == 'complete') {return u[1].verify.value == member.user.id} else {return false}})
+    let index = the[0]
+    let user = the[1]
+    user.products.push(pid)
+    database.set('users.'+index+'.products', user.products)
+    return await bot.functions.sendFile(member, pid)
+};
+bot.functions.revokeProduct = (uid, pid) => {
+    var database = editJsonFile('database.json', {autosave: true})
+    let users = database.get('users')
+    let format = Object.entries(users)
+    let the = format.find(u => {if (u[1].verify.status == 'complete') {return u[1].verify.value == uid} else {return false}})
+    let index = the[0]
+    let user = the[1]
+    user.products.splice(user.products.indexOf(pid), 1)
+    database.set('users.'+index, user)
+};
 for (const file of fs.readdirSync('./commands').filter(file => file.endsWith('.js'))) {
     const command = require(`./commands/${file}`);
     bot.commands.set(command.name, command);
@@ -145,18 +175,29 @@ bot.on('message', async (message) => {
 // WEBAPP HANDLING
 const app = express();
 app.use(rateLimit({
-  max: 60, // 60 requests max...
-  windowMs: 0.5 * 60 * 1000, // ...for 0.5 minutes
-  handler: async (request, response) => {
-    response.status(403);
-    response.json({ status: 'error', error: 'Too many requests' })
-  }
+    max: 120, // 120 requests max...
+    windowMs: 1 * 60 * 1000, // ...for 1 minute
+    handler: async (request, response) => {
+        response.status(403);
+        response.json({ status: 'error', error: 'Too many requests' })
+    }
 }));
+app.use(async (request, response, next) => {
+    if (!bot.user) {
+        response.status(500)
+        response.json({ status: 'error', error: 'Service unavailable'})
+    } else next()
+});
 app.get('/', async (request, response) => {
     response.status(200);
     response.json({ status: 'ok', running: true })
 });
-app.get('/user/:robloxid', async (request, response) => {
+app.get('/user/:robloxid/', async (request, response) => {
+    if (!request.query.key || request.query.key !== process.env.HUB_APIKEY) {
+        response.status(403);
+        response.json({ status: 'error', error: 'Unauthorized request' })
+        return
+    }
     var database = editJsonFile('database.json', {autosave: true})
     var NotFound = false
     let robloxUser = await rbx.getPlayerInfo(request.params.robloxid)
@@ -206,6 +247,83 @@ app.get('/user/:robloxid', async (request, response) => {
         response.json({ status: 'error', error: 'Not found' })
     }
 });
+app.get('/products/', async (request, response) => {
+    if (!request.query.key || request.query.key !== process.env.HUB_APIKEY) {
+        response.status(403);
+        response.json({ status: 'error', error: 'Unauthorized request' });
+        return
+    }
+    var database = editJsonFile('database.json', {autosave: true})
+    database.get('products')
+    response.status(200);
+    response.json({ status: 'ok', products: database.get('products') })
+});
+app.get('/products/give/:productid/:robloxid/', async (request, response) => {
+    if (!request.query.key || request.query.key !== process.env.HUB_APIKEY) {
+        response.status(403);
+        response.json({ status: 'error', error: 'Unauthorized request' });
+        return
+    }
+    var database = editJsonFile('database.json', {autosave: true})
+    if (!database.get('products.'+request.params.productid)) {
+        response.status(404);
+        response.json({ status: 'error', error: 'Product not found' });
+        return
+    }
+    let users = database.get('users')
+    if (users) {
+        let formatted = Object.entries(users)
+        let me = formatted.find(u => {if (u[1].verify.status == 'complete') {return u[1].robloxId == request.params.robloxid} else {return false}})
+        if (!me) {
+            response.status(404);
+            response.json({ status: 'error', error: 'User not found' });
+            return
+        }
+        let user = me[1]
+        if (user.products.find(r => r == request.params.productid)) {
+            response.status(404);
+            response.json({ status: 'error', error: 'Already owned' });
+            return
+        }
+        let guild = bot.guilds.cache.get(process.env.BOT_PRIMARYGUILD)
+        let sent = await bot.functions.giveProduct(guild.members.cache.find(m => m.user.id == user.verify.value), request.params.productid)
+        response.status(200);
+        response.json({ status: 'ok', success: true, dm: sent })
+    }
+});
+app.get('/products/revoke/:productid/:robloxid/', async (request, response) => {
+    if (!request.query.key || request.query.key !== process.env.HUB_APIKEY) {
+        response.status(403);
+        response.json({ status: 'error', error: 'Unauthorized request' });
+        return
+    }
+    var database = editJsonFile('database.json', {autosave: true})
+    if (!database.get('products.'+request.params.productid)) {
+        response.status(404);
+        response.json({ status: 'error', error: 'Product not found' });
+        return
+    }
+    let users = database.get('users')
+    if (users) {
+        let formatted = Object.entries(users)
+        let me = formatted.find(u => {if (u[1].verify.status == 'complete') {return u[1].robloxId == request.params.robloxid} else {return false}})
+        if (!me) {
+            response.status(404);
+            response.json({ status: 'error', error: 'User not found' });
+            return
+        }
+        let user = me[1]
+        if (!user.products.find(r => r == request.params.productid)) {
+            response.status(404);
+            response.json({ status: 'error', error: 'Does not own product' });
+            return
+        }
+        let guild = bot.guilds.cache.get(process.env.BOT_PRIMARYGUILD)
+        bot.functions.revokeProduct(guild.members.cache.find(m => m.user.id == user.verify.value), request.params.productid)
+        response.status(200);
+        response.json({ status: 'ok', success: true })
+    }
+});
 app.use(async (request, response, next) => {
     response.status(404)
     response.json({ status: 'error', error: 'Path not found'})
@@ -215,9 +333,6 @@ app.use(async (request, response, next) => {
 process.stdin.resume();
 function exitHandler(options, exitCode) {
     if (bot.user) {
-        bot.user.setPresence({
-            status: 'invisible'
-        });
         bot.destroy();
     }
     process.exit();

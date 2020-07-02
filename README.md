@@ -21,6 +21,7 @@ To install this Discord Bot, you will need to do the following:
     HUB_ACCESSPORT=
 
     # KEYS
+    HUB_APIKEY=
     UUID_NAMESPACE=
     ```
     - Input your `.env` information as shown below:
@@ -29,6 +30,7 @@ To install this Discord Bot, you will need to do the following:
         - `BOT_PREFIX` Set this to your preferred bot prefix. (Recommended: `!`)
         - `BOT_PRIMARYGUILD` Set this to the ID of the Server you would like to use the bot in.
         - `HUB_ACCESSPORT` Set this to a random four digit integer. This will be used later when scripting your Hub to work with this bot.
+        - `HUB_APIKEY` Set this to a random alphanumeric string. This will be used for system security. Even if your IP is leaked, you need to have this API key in order to do that. This should be changeable in order to prevent unfixable security issues.
         - `UUID_NAMESPACE` Set this to the UUID generated [here](https://www.uuidgenerator.net/). This will be used to encrypt your user's database index UUIDs and make them truly randomized.
 
 ## Running the Bot

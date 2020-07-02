@@ -15,7 +15,7 @@ module.exports = {
     ],
     guildOnly: true,
     userPermissions: [
-        'MANAGE_ROLES'
+        'MANAGE_GUILD'
     ],
     clientPermissions: [
         'SEND_MESSAGES',

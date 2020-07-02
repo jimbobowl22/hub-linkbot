@@ -10,9 +10,7 @@ module.exports = {
         }
     ],
     guildOnly: true,
-    userPermissions: [
-        'MANAGE_ROLES'
-    ],
+    userPermissions: [],
     clientPermissions: [
         'SEND_MESSAGES'
     ],
@@ -42,15 +40,44 @@ module.exports = {
             await message.channel.send(ThisEmbed)
             return
         }
-        let { path } = database.get('products.'+args[0])
-        fs.unlinkSync(path)
-        database.unset('products.'+args[0])
+        let users = database.get('users')
+        if (!users) {
+            let ThisEmbed = new Discord.MessageEmbed()
+                .setColor(Number(process.env.BOT_EMBEDCOLOR))
+                .setAuthor(message.author.username, message.author.displayAvatarURL())
+                .setTitle('**Retrieve Information**')
+                .addField('Status', ':x: **Cancelled!**', true)
+                .addField('Error', 'Does not own product.', true)
+                .setThumbnail(guild.iconURL())
+            await message.channel.send(ThisEmbed)
+            return
+        }
+        let formatted = Object.values(users)
+        let me = formatted.find(v => {if (v.verify.status == "complete") {return v.verify.value == message.author.id} else {return false}})
+        if (!me.products.find(p => args[0])) {
+            let ThisEmbed = new Discord.MessageEmbed()
+                .setColor(Number(process.env.BOT_EMBEDCOLOR))
+                .setAuthor(message.author.username, message.author.displayAvatarURL())
+                .setTitle('**Retrieve Information**')
+                .addField('Status', ':x: **Cancelled!**', true)
+                .addField('Error', 'Does not own product.', true)
+                .setThumbnail(guild.iconURL())
+            await message.channel.send(ThisEmbed)
+            return
+        }
+        let sent = await bot.functions.sendFile(message.member, args[0])
         let ThisEmbed = new Discord.MessageEmbed()
             .setColor(Number(process.env.BOT_EMBEDCOLOR))
             .setAuthor(message.author.username, message.author.displayAvatarURL())
             .setTitle('**Retrieve Information**')
-            .addField('Status', ':white_check_mark: **Complete!**', true)
             .setThumbnail(guild.iconURL())
+        if (sent) {
+            ThisEmbed.addField('Status', ':white_check_mark: **Complete!**', true)
+            ThisEmbed.addField('Task', 'Please check your DMs.', true)
+        } else {
+            ThisEmbed.addField('Status', ':x: **Incomplete!**', true)
+            ThisEmbed.addField('Task', 'Please open your Direct Messages and try again.', true)
+        }
         await message.channel.send(ThisEmbed)
 	}
 };

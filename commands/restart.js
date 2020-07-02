@@ -21,7 +21,7 @@ module.exports = {
         let m = await message.channel.send(Loading)
         fs.open(`restart.json`,'r',function(err, fd){
             if (err) {
-                fs.writeFile(`restart.json`, '', function(err) {
+                fs.writeFile(`restart.json`, '{}', function(err) {
                     if(err) {
                         console.log(err);
                     }
@@ -36,9 +36,6 @@ module.exports = {
                         username: message.author.username,
                         guildIcon: message.guild.iconURL()
                     })
-                    bot.user.setPresence({
-                        status: 'invisible'
-                    });
                     bot.destroy();
                     console.log('PROCESS | Restarting...')
                     process.exit(2)
@@ -55,9 +52,6 @@ module.exports = {
                     username: message.author.username,
                     guildIcon: message.guild.iconURL()
                 })
-                bot.user.setPresence({
-                    status: 'invisible'
-                });
                 bot.destroy();
                 console.log('PROCESS | Restarting...')
                 process.exit(2)

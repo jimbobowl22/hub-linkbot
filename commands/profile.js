@@ -42,7 +42,7 @@ module.exports = {
                 let index = set[0]
                 let value = set[1]
                 let finalProduct = [];
-                value.products.forEach((v)=>{let name=database.get('products.'+v);if(name)finalProduct.push(`**${name}** \`${v}\``)})
+                value.products.forEach((v)=>{let { name }=database.get('products.'+v);if(name)finalProduct.push(`**${name}** \`${v}\``)})
                 let ThisEmbed = new Discord.MessageEmbed()
                     .setColor(Number(process.env.BOT_EMBEDCOLOR))
                     .setAuthor(message.author.username, message.author.displayAvatarURL())
