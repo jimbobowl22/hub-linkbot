@@ -58,3 +58,15 @@ Already added are many commands that can be used to manage the whitelist system 
 ## Connecting to your Hub
 There are many ways to trigger functions in the Discord Bot from HTTP requests, but the most important thing to do is to write down the IP at which you are running this Discord Bot and write down the `HUB_ACCESSPORT` that you put in the `.env` file before coding with this hub. This information will be referenced multiple times from the scripts in your ROBLOX Product Hub.
 
+###### Playing with Endpoints (Self-Writing)
+This section is not recommended unless you know exactly what you are doing and how to go about doing things. Listed below are the endpoints necessary to use this Bot:
+- **GET** `/` This endpoint is used to view the main status of the page. (Template: `{"status":"ok","running":true}`)
+- **GET** `/products/` This endpoint is used to view all product information. (Template: `{"status":"ok","products":{"productId1":{"name":"productName","path":"productFilePath"}}}`, this endpoint requires an API key.)
+- **GET** `/products/give/[Product ID]/[ROBLOX User ID]/` This endpoint is used to give a user a product. This will not only edit the whitelist, but send them the product file in DMs. (Template: `{"status":"ok","success":true,"dm":true}`, this endpoint requires an API key.)
+- **GET** `/products/revoke/[Product ID]/[ROBLOX User ID]/` This endpoint is used to revoke the whitelist of a product for a user. This will not send the user a DM. (Template: `{"status":"ok","success":true}`, this endpoint requires an API key.)
+- **GET** `/users/[ROBLOX User ID]/` This endpoint is used to view all information collected about a user. Please note that the field labelled "index" is the user's UUID, which you can search for a profile with if needed in Discord. (Template: `{"status":"ok","index":"userUUID","value":{"robloxId":"userROBLOXID","robloxUsername":"userROBLOXUsername","verify":{"status":"complete/link","value":"discordID/linkcode"},"products":["insert","array","of","product","ids"]}}`, this endpoint requires an API key.)
+
+When encountering errors, the website will return something such as: `{"status":"error", "error":"errorMessage}`
+Most of the error messages are `User not found`, `Product not found`, and stuff like that. Feel free to take a look at the handler.js file to take a look at every error if you are looking into handling it through your Hub. (Line: 195)
+
+###### Playing with Endpoints (Self-Writing)
