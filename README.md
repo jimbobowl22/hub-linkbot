@@ -30,7 +30,7 @@ To install this Discord Bot, you will need to do the following:
         - `BOT_PREFIX` Set this to your preferred bot prefix. (Recommended: `!`)
         - `BOT_PRIMARYGUILD` Set this to the ID of the Server you would like to use the bot in.
         - `HUB_ACCESSPORT` Set this to a random four digit integer. This will be used later when scripting your Hub to work with this bot.
-        - `HUB_APIKEY` Set this to a random alphanumeric string. This will be used for system security. Even if your IP is leaked, you need to have this API key in order to do that. This should be changeable in order to prevent unfixable security issues.
+        - `HUB_APIKEY` Set this to a [random alphanumeric string](https://onlinerandomtools.com/generate-random-string?length=32&count=1&predefined-charset=alphamixnum&custom-charset=). This will be used for system security. Even if your IP and Port are leaked, you need to have this changable API key in order to back you up in order to prevent unfixable security issues.
         - `UUID_NAMESPACE` Set this to the UUID generated [here](https://www.uuidgenerator.net/). This will be used to encrypt your user's database index UUIDs and make them truly randomized.
 
 ## Running the Bot
@@ -44,4 +44,5 @@ To start the bot, run the following command:
 The bot should never need to come offline, as the `!restart` command restarts the whole process and updates the bot's code on it's own. Most errors will also be caught with this command, prompting you to update the code and restart the bot yourself.
 
 ## Connecting to your Hub
-There are many ways to trigger functions in the Discord Bot from HTTP requests, but the most important thing to do is to write down the IP at which you are running this Discord Bot and write down the `HUB_ACCESSPORT` that you put in the `.env` file. This information will be referenced multiple times from the scripts in your ROBLOX Product Hub.
+There are many ways to trigger functions in the Discord Bot from HTTP requests, but the most important thing to do is to write down the IP at which you are running this Discord Bot and write down the `HUB_ACCESSPORT` that you put in the `.env` file before coding with this hub. This information will be referenced multiple times from the scripts in your ROBLOX Product Hub.
+
