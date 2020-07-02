@@ -1,5 +1,5 @@
 # Hub Whitelist Bot (jdwoj5)
-This whitelisting bot is made for ROBLOX Tech Groups to use in their Discord Servers. It will help deliver products through web requests and store data of users.
+This whitelisting bot is made for ROBLOX Tech Groups to use in their Discord Servers. It will help deliver products through web requests and store data of users. Please note that while this works, it may not be so appealing to the eye as the Zing Tech one is, but it works nevertheless and has more features.
 
 ## Installation
 To install this Discord Bot, you will need to do the following:
@@ -8,7 +8,7 @@ To install this Discord Bot, you will need to do the following:
 2. Ensure it has the [Node.js](https://nodejs.org/en/) engine installed.
 3. Clone this repository with `git clone https://github.com/jdwoj5/hub-linkbot`
 4. Create a [Discord Application](https://discord.com/developers/applications) with a Bot created in the Bot Section.
-5. Create a file named `.env`, which is where we will store crucial information. 
+5. Create a file named `.env` in the main folder/directory to store crucial information. 
     - Paste the following into your `.env` file:
     ```env
     # BOT CONFIGURATION
@@ -69,4 +69,64 @@ This section is not recommended unless you know exactly what you are doing and h
 When encountering errors, the website will return something such as: `{"status":"error", "error":"errorMessage}`
 Most of the error messages are `User not found`, `Product not found`, and stuff like that. Feel free to take a look at the handler.js file to take a look at every error if you are looking into handling it through your Hub. (Line: 195)
 
-###### Playing with Endpoints (Self-Writing)
+###### ROBLOX Web API Module (Pre-Written)
+**This section is coming soon.**
+
+###### Checking the Whitelist
+Written below is a Whitelist Checker that you may use to check whitelists. Setting it up should be easy, but please ensure that this script is directly inside the main folder, as it will destroy the parent of the script when loading. It is recommended that all server-side code is stored in this whitelist script and this whitelist script is obfuscated, so that no one can remove this script and have it still run entirely.
+
+```lua
+--[[
+    ROBLOX-Whitelist
+    Please do not edit below! This script should be obfuscated to increase security.
+--]]
+
+-- PRODUCT SETUP
+local ProductId = ""
+local IP = ""
+local Port = "" -- If 80, leave blank.
+local APIKey = ""
+
+-- WHITELIST CHECK
+local Http = game:GetService("HttpService")
+local URL = IP
+if Port ~= "" and Port ~= nil then
+    URL = URL..":"..Port
+end
+function HasProduct(info)
+    local Owned = false
+    for i=1,#info.value.products in pairs(info.value.products) do
+        if info.value.products[i] == ProductId then
+            Owned = true
+        end
+    end
+    return Owned
+end
+warn("["..string.upper(ProductId).."] Loading...")
+local GameOwner = nil
+if game.CreatorType == Enum.CreatorType.Group then
+    GameOwner = game:GetService("GroupService"):GetGroupInfoAsync(game.CreatorId).Owner.Id
+else
+    GameOwner = game.CreatorId
+end
+local UserInfoEncoded = ""
+local HttpEnabled = pcall(function()
+    UserInfoEncoded = Http:GetAsync("http://"..URL.."/user/"..GameOwner.."?key="..APIKey)
+end)
+if HttpEnabled == false then
+	warn("["..string.upper(ProductId).."] An error has occured. (Are HTTP services enabled?)")
+    script.Parent:Destroy()
+    return
+end
+local UserInfo = http:JSONDecode(UserInfoEncoded)
+if UserInfo.status == "error" or HasProduct(UserInfo) == false then
+	warn("["..string.upper(ProductId).."] An error has occured. (Does the Owner own the product?)")
+	script.Parent:Destroy()
+    return
+end
+warn("["..string.upper(ProductId).."] Loaded!")
+```
+
+## Credits
+- [discord.js's Documentation Pages](https://discord.js.org/#/docs/main/stable/general/welcome) | Helped me with how the discord.js module works, and I always use these Documentation pages when writing code.
+- [Zing Tech Whitelisting Bot](https://github.com/iPanda969/whitelistbot) | Helped me learn how to use the express module almost entirely, also greatly inspired me to make an open source bot for myself with file management.
