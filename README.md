@@ -62,8 +62,8 @@ All commands are locked with a **permission-based system**. This means that role
 
 ## Pre-Installed Commands
 Already added are many commands that can be used to manage the whitelist system and product creation. Here is a list of them:
-- `!createproduct` Creates a product.
-- `!deleteproduct` Deletes a product with its file.
+- `!create` Creates a product.
+- `!delete` Deletes a product with its file.
 - `!forceunlink` Forcefully unlinks a selected Discord Account to your Registered User.
 - `!help` Displays all the bot's commands and information.
 - `!link` Links your Discord Account to your Registered User with a code generated from the Hub.
