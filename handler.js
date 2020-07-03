@@ -33,7 +33,7 @@ if (!fs.existsSync(dir)){
     fs.mkdirSync(dir);
     console.log("PROCESS | Product-Files Folder creation complete!");
 } else {
-    console.log("PROCESS | Product-Files Folder found!");
+    if (process.argv[2] !== '--restarted') console.log("PROCESS | Product-Files Folder found!");
 }
 
 // DISCORD CLIENT HANDLING
