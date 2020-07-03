@@ -75,20 +75,32 @@ module.exports = {
             if (!toset) toset = entries.find(u => {if (u[1].verify.status == 'complete') {return u[1].robloxId == args[1]} else {return false}})
             if (!toset && tomember) toset = entries.find(u => {if (u[1].verify.status == 'complete') {return u[1].verify.value == tomember.user.id} else {return false}})
             if (set && toset) {
-                await bot.functions.revokeProduct(guild.members.cache.find(m => m.user.id == frommember.user.id), args[2])
-                let sent = await bot.functions.giveProduct(guild.members.cache.find(m => m.user.id == tomember.user.id), args[2])
-                let ThisEmbed = new Discord.MessageEmbed()
-                    .setColor(Number(process.env.BOT_EMBEDCOLOR))
-                    .setAuthor(message.author.username, message.author.displayAvatarURL())
-                    .setTitle('**Whitelist Information**')
-                    .addField('Status', ':white_check_mark: **Complete!**', true)
-                    .addField('Gave Product', args[2], true)
-                    .addField('From User', set[1].robloxUsername, true)
-                    .addField('To User', toset[1].robloxUsername, true)
-                    .addField('DM Success', sent, true)
-                    .setThumbnail(guild.iconURL())
-                await message.channel.send(ThisEmbed)
-                return
+                if (set.products.find(r => r == args[2]) && !toset.products.find(r => r == args[2])) {
+                    await bot.functions.revokeProduct(guild.members.cache.find(m => m.user.id == frommember.user.id), args[2])
+                    let sent = await bot.functions.giveProduct(guild.members.cache.find(m => m.user.id == tomember.user.id), args[2])
+                    let ThisEmbed = new Discord.MessageEmbed()
+                        .setColor(Number(process.env.BOT_EMBEDCOLOR))
+                        .setAuthor(message.author.username, message.author.displayAvatarURL())
+                        .setTitle('**Whitelist Information**')
+                        .addField('Status', ':white_check_mark: **Complete!**', true)
+                        .addField('Gave Product', args[2], true)
+                        .addField('From User', set[1].robloxUsername, true)
+                        .addField('To User', toset[1].robloxUsername, true)
+                        .addField('DM Success', sent, true)
+                        .setThumbnail(guild.iconURL())
+                    await message.channel.send(ThisEmbed)
+                    return
+                } else {
+                    let ThisEmbed = new Discord.MessageEmbed()
+                        .setColor(Number(process.env.BOT_EMBEDCOLOR))
+                        .setAuthor(message.author.username, message.author.displayAvatarURL())
+                        .setTitle('**Whitelist Information**')
+                        .addField('Status', ':x: **Incomplete!**', true)
+                        .addField('Error', 'Product Ownership does not match.', true)
+                        .setThumbnail(guild.iconURL())
+                    await message.channel.send(ThisEmbed)
+                    return
+                }
             } else if (!toset) {
                 let ThisEmbed = new Discord.MessageEmbed()
                     .setColor(Number(process.env.BOT_EMBEDCOLOR))
