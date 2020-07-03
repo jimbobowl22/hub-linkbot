@@ -1,3 +1,7 @@
+<p align="center">
+    <img src="/assets/title.png" alt="Title Image" height="150" /></a>
+</p>
+
 # Hub Whitelist Bot (jdwoj5)
 This whitelisting bot is made for ROBLOX Tech Groups to use in their Discord Servers. It will help deliver products through web requests and store data of users. Please note that while this works, it may not be so appealing to the eye as the Zing Tech one is, but it works nevertheless and has more features.
 
