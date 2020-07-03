@@ -54,7 +54,7 @@ module.exports = {
             var target;
             target = guild.members.cache.get(info);
             if (target) return target;
-            target = guild.members.cache.find(u => u.user.id == message.mentions.users.first().id);
+            target = guild.members.cache.find(u => {if (message.mentions.users.first()) return u.user.id == message.mentions.users.first().id; else return false});
             if (target) return target;
             target = guild.members.cache.find(u => u.user.id == info);
             if (target) return target;
