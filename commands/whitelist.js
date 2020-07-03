@@ -51,6 +51,8 @@ module.exports = {
             var target;
             target = guild.members.cache.get(info);
             if (target) return target;
+            target = guild.members.cache.find(u => u.user.id == message.mentions.users.first().id);
+            if (target) return target;
             target = guild.members.cache.find(u => u.user.id == info);
             if (target) return target;
             target = guild.members.cache.find(u => u.user.tag.includes(info));
