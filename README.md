@@ -54,6 +54,7 @@ To start the bot, run the following command:
 - `node server.js`
 
 The bot should never need to come offline, as the `!restart` command restarts the whole process and updates the bot's code on it's own. Most errors will also be caught with this command, prompting you to update the code and restart the bot yourself.
+All commands are locked with a **permission-based system**. This means that roles are not used for command permissinons, and commands are given to people with specific discord-type permissions instead. To see the permissions used for each command, go into the command file and view the property `userPermissions: []`, as that is where the permissions are defined. 
 
 ## Pre-Installed Commands
 Already added are many commands that can be used to manage the whitelist system and product creation. Here is a list of them:
