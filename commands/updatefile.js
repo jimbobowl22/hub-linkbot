@@ -4,7 +4,7 @@ const request = require('request');
 const fs = require('fs');
 module.exports = {
 	name: 'updatefile',
-	description: 'Updates a product file.',
+	description: 'Updates a product file and sends out a mass DM with the new file.',
 	arguments: [
         {
             label: "Product ID"

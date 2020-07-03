@@ -74,7 +74,7 @@ Already added are many commands that can be used to manage the whitelist system 
 - `!retrieve` Fetches a product file.
 - `!revoke` Revokes a user access to a product.
 - `!transfer` Transfers product access from one user to another.
-- `!updatefile` Updates a product file.
+- `!updatefile` Updates a product file and sends out a mass DM with the new file.
 - `!whitelist` Gives a user access to a product.
 
 
