@@ -53,7 +53,7 @@ module.exports = {
                 .setAuthor(message.author.username, message.author.displayAvatarURL())
                 .setTitle('**Create Information**')
                 .addField('Status', ':hourglass_flowing_sand: **Waiting for File...**', true)
-                .addField('Task', 'Please Attatch the file you would like to use.', true)
+                .addField('Task', 'Please Attach the file you would like to use.', true)
                 .setThumbnail(guild.iconURL())
             let m = await message.channel.send(Loading)
             var ret = false
