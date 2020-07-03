@@ -72,6 +72,11 @@ Already added are many commands that can be used to manage the whitelist system 
 - `!profile` Displays all information stored about a user.
 - `!restart` Restarts the bot, updating all the code with it.
 - `!retrieve` Fetches a product file.
+- `!revoke` Revokes a user access to a product.
+- `!transfer` Transfers product access from one user to another.
+- `!updatefile` Updates a product file.
+- `!whitelist` Gives a user access to a product.
+
 
 ## Connecting to your Hub
 There are many ways to trigger functions in the Discord Bot from HTTP requests, but the most important thing to do is to write down the IP at which you are running this Discord Bot and write down the `HUB_ACCESSPORT` that you put in the `.env` file before coding with this hub. This information will be referenced multiple times from the scripts in your ROBLOX Product Hub.
