@@ -3,7 +3,7 @@ const editJsonFile = require('edit-json-file');
 const request = require('request');
 const fs = require('fs');
 module.exports = {
-	name: 'createproduct',
+	name: 'create',
 	description: 'Creates a product.',
 	arguments: [
         {

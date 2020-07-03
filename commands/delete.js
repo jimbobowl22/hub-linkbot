@@ -2,7 +2,7 @@ const Discord = require('discord.js')
 const editJsonFile = require('edit-json-file');
 const fs = require('fs');
 module.exports = {
-	name: 'deleteproduct',
+	name: 'delete',
 	description: 'Deletes a product with it\s file.',
 	arguments: [
         {

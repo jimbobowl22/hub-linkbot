@@ -11,9 +11,9 @@ const editJsonFile = require('edit-json-file');
 const { v5: uuid } = require('uuid');
 const rbx = require('noblox.js');
 var http = require('http');
-var https = require('https');
+// var https = require('https');
 
-// DATABASE CREATION HANDLING
+// FILE CREATION HANDLING
 fs.open(`database.json`,'r',function(err, fd){
     if (err) {
         console.log("PROCESS | No database found! Creating a new one...");
@@ -27,6 +27,14 @@ fs.open(`database.json`,'r',function(err, fd){
         if (process.argv[2] !== '--restarted') console.log("PROCESS | Database found!");
     }
 });
+var dir = 'product-files';
+if (!fs.existsSync(dir)){
+    console.log("PROCESS | No Product-Files Folder! Creating a new one...");
+    fs.mkdirSync(dir);
+    console.log("PROCESS | Product-Files Folder creation complete!");
+} else {
+    console.log("PROCESS | Product-Files Folder found!");
+}
 
 // DISCORD CLIENT HANDLING
 const bot = new Discord.Client({
@@ -53,9 +61,13 @@ bot.functions.sendFile = async (member, pid) => {
         .addField('Product', name, true)
         .setThumbnail(guild.iconURL())
     var sent = true
-    await member.send(ThisEmbed).catch(err => sent = false)
+    await member.send(ThisEmbed).catch(err => {
+        sent = false
+    })
     let file = new Discord.MessageAttachment(path, member.user.id+'-'+pid+'.'+path.split('.')[path.split('.').length - 1])
-    await member.send(file).catch(err => sent = false)
+    await member.send(file).catch(err => {
+        sent = false
+    })
     return sent
 };
 bot.functions.updateMember = async (member) => {
@@ -189,7 +201,7 @@ bot.on('guildMemberAdd', async (member) => {
     await bot.functions.updateMember(member)
 })
 bot.on('error', async (error) => {
-    console.log(error)
+    console.error(error)
 })
 
 // WEBAPP HANDLING
