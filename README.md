@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="/assets/title.png" alt="Title Image" height="150" /></a>
+    <img src="/assets/title.png" alt="Title Image" /></a>
 </p>
 
 # Hub Whitelist Bot (jdwoj5)
