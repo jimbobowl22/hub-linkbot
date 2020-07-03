@@ -35,7 +35,6 @@ module.exports = {
             return guild.members.cache.find(u => u.user.id == message.author.id);
         }
         let member = await getMember(message, args.join(' '), guild)
-        let robloxUsername = await bot.functions.updateMember(guild.members.cache.find(m => m.user.id == member.user.id))
         if (users) {
             let entries = Object.entries(users)
             var set = entries.find(u => {if (u[1].verify.status == 'complete') {return u[0] == args.join(' ')} else {return false}})

@@ -78,6 +78,7 @@ bot.functions.updateMember = async (member) => {
     if (roleResolved.position >= guild.me.roles.highest.position) return false
     var database = editJsonFile('database.json', {autosave: true})
     let users = database.get('users')
+    if (!users) return false
     let format = Object.entries(users)
     let the = format.find(u => {if (u[1].verify.status == 'complete') {return u[1].verify.value == member.user.id} else {return false}})
     if (the) {
