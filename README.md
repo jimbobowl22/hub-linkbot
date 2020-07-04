@@ -106,19 +106,14 @@ Written below is a Whitelist Checker that you may use to check whitelists. Setti
 
 -- PRODUCT SETUP
 local ProductId = ""
-local IP = ""
-local Port = "" -- If 80, leave blank.
+local URL = "" -- "IP:Port"
 local APIKey = ""
 
 -- WHITELIST CHECK
 local Http = game:GetService("HttpService")
-local URL = IP
-if Port ~= "" and Port ~= nil then
-    URL = URL..":"..Port
-end
 function HasProduct(info)
     local Owned = false
-    for i=1,#info.value.products in pairs(info.value.products) do
+    for i=1,#info.value.products do
         if info.value.products[i] == ProductId then
             Owned = true
         end
