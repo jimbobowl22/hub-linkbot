@@ -136,7 +136,7 @@ if HttpEnabled == false then
     script.Parent:Destroy()
     return
 end
-local UserInfo = http:JSONDecode(UserInfoEncoded)
+local UserInfo = Http:JSONDecode(UserInfoEncoded)
 if UserInfo.status == "error" or HasProduct(UserInfo) == false then
 	warn("["..string.upper(ProductId).."] An error has occured. (Does the Owner own the product?)")
 	script.Parent:Destroy()
