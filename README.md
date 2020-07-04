@@ -44,7 +44,7 @@ To install this Discord Bot, you will need to do the following:
         - `BOT_PREFIX` Set this to your preferred bot prefix. (Recommended: `!`)
         - `BOT_PRIMARYGUILD` Set this to the ID of the Server you would like to use the bot in.
         - `BOT_VERIFIEDROLEID` Set this to the ID of the Role you would like to give users if they are verified.
-        - `HUB_ACCESSPORT` Set this to a random four digit integer. This will be used later when scripting your Hub to work with this bot.
+        - `HUB_ACCESSPORT` Set this to a random four digit integer. This will be used later when scripting your Hub to work with this bot. (If you are using a VPS that predefines the `PORT` variable with process.env.PORT, you may leave this blank.)
         - `HUB_CHANGENICKNAME` Set this to true if you want the bot to change the nickname on account link, and false if you do not.
         - `HUB_APIKEY` Set this to a [random alphanumeric string](https://onlinerandomtools.com/generate-random-string?length=32&count=1&predefined-charset=alphamixnum&custom-charset=). This will be used for system security. Even if your IP and Port are leaked, you need to have this changable API key in order to back you up in order to prevent unfixable security issues.
         - `UUID_NAMESPACE` Set this to the UUID generated [here](https://www.uuidgenerator.net/). This will be used to encrypt your user's database index UUIDs and make them truly randomized.
