@@ -93,7 +93,111 @@ When encountering errors, the website will return something such as: `{"status":
 Most of the error messages are `User not found`, `Product not found`, and stuff like that. Feel free to take a look at the handler.js file to take a look at every error if you are looking into handling it through your Hub. (Line: 195)
 
 ###### ROBLOX Web API ModuleScript (Pre-Written)
-**If you would like to see this section added, please DM me on Discord:** `@jdwoj5butbetter#1132`
+Written below is a ModuleScript that you may use to make coding your hub easier. Setting it up should be easy, but please ensure that this script is inside ServerScriptService, as it contains confidential information. It is not recommended to edit the script in any other place than the URL variable and the Key variable.
+
+```lua
+--[[
+	ROBLOX-HubModule
+	Please do not edit below! This script should be obfuscated to increase security.
+--]]
+
+local URL = ""; -- IP:PORT or Defined URL
+local Key = ""; -- API Key defined in your .env file
+
+--[[				// Functions \\
+	--------------
+	 GetStatus() returns true/false (Is it running?)
+	--------------
+	 GetUserProducts([User ID]) returns Array[Products]
+	--------------
+	 GetVerifyStatus([User ID]) returns 'link'/'complete'
+	--------------
+	 GetLinkCode([User ID]) returns Link Code (Returns false if verified)
+	--------------
+	 WaitForVerify([User ID]) returns void (Returns when user is verified)
+	--------------
+	 GetAllProducts([User ID]) returns Array[Products]
+	--------------
+	 WhitelistUser([Product ID], [User ID]) returns true/false (Did the delivery DM succeed?)
+	--------------
+	 RevokeUser([Product ID], [User ID]) returns void
+	--------------
+--]]
+
+local Success,Error = pcall(function()
+	if game.Players.LocalPlayer ~= nil then
+		game.Players.LocalPlayer:Kick("HUB | You must not have this Module stored locally!");
+	end;
+end);
+if not script:IsDescendantOf(game.ServerScriptService) then
+	error("HUB | You must have this Module this in ServerScriptService!");
+end;
+function GetURL(Endpoint)
+	return 'http://'..URL..Endpoint.."?key="..Key;
+end;
+local HttpService = {
+	GetAsync = function(URL)
+		local Request = game:GetService('HttpService'):RequestAsync({
+			Url = URL;
+			Method = "GET";
+		});
+		if not Request.Success then
+			return nil;
+		else
+			return Request.StatusCode, game:GetService('HttpService'):JSONDecode(Request.Body);
+		end;
+	end;
+};
+local Module = {};
+local UserCache = {};
+Module.GetStatus = function(ID)
+	local Status, Data = HttpService:GetAsync(GetURL('/'));
+	if not Data then
+		return false;
+	end;
+	if Data.running == true then
+		return true;
+	end;
+	return false;
+end;
+Module.GetUserProducts = function(ID)
+	local Status, Data = HttpService:GetAsync(GetURL('/user/'..ID));
+	return Data;
+end;
+Module.GetVerifyStatus = function(ID)
+	local Status, Data = HttpService:GetAsync(GetURL('/user/'..ID));
+	return Data.verify.status;
+end;
+Module.GetLinkCode = function(ID)
+	local Status, Data = HttpService:GetAsync(GetURL('/user/'..ID));
+	if Data.verify.status == 'link' then
+		return Data.verify.value;
+	else
+		return false;
+	end;
+end;
+Module.WaitForVerify = function(ID)
+	while true do
+		local Status, Data = HttpService:GetAsync(GetURL('/user/'..ID));
+		if Data.verify.status == 'complete' then
+			return;
+		end;
+		wait(2);
+	end;
+end;
+Module.GetAllProducts = function(ID)
+	local Status, Data = HttpService:GetAsync(GetURL('/products'));
+	return Data;
+end;
+Module.WhitelistUser = function(Product, ID)
+	local Status, Data = HttpService:GetAsync(GetURL('/products/give/'..Product..'/'..ID));
+	return Data;
+end;
+Module.RevokeUser = function(Product, ID)
+	local Status, Data = HttpService:GetAsync(GetURL('/products/revoke/'..Product..'/'..ID));
+end;
+return Module;
+```
 
 ###### Checking the Whitelist
 Written below is a Whitelist Checker that you may use to check whitelists. Setting it up should be easy, but please ensure that this script is directly inside the main folder, as it will destroy the parent of the script when loading. It is recommended that all server-side code is stored in this whitelist script and this whitelist script is obfuscated, so that no one can remove this script and have it still run entirely.
