@@ -10,7 +10,7 @@ To install this Discord Bot, you will need to do the following:
 
 1. Obtain a VPS, or a computer to host this locally. (This is probably going to be the most difficult step of the entire installation process.)
     - Please note that Heroku will not work, as we are writing files that should be persistant, and Heroku rebuilds around every 24 hours. using Heroku would require you to rework the database system entirely to function with Heroku instead of using `.json` files.
-    - Glitch also probably will not work, as Glitch requires requests to keep uptime, and this bot should be running almost 24/7. If you can find a way to ping your Glitch URL every 4 minutes, then Glitch should work fine, just be sure to set the PORT in your `.env` to 80.
+    - Glitch will not work unless you boost your project. As pinging services have been banned, uptime of the bot is crucial.
     - You will need to put the IP of the place you are running the bot in your products and your hub, so we recommend a few ways to secure this information:
         - Use DDoS protection, a VPN, or a proxy of sorts.
         - Host on a VPS to prevent your personal IP from getting leaked.
