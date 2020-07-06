@@ -15,10 +15,10 @@ module.exports = {
             .setColor(Number(process.env.BOT_EMBEDCOLOR))
             .setAuthor(message.author.username, message.author.displayAvatarURL())
             .setTitle('**Help Information**')
-            .addField('Description', 'This bot is used to deliver products to users who buy them. It is also used for account linking and to get user information.', true)
-            .addField('Commands', bot.commands.array().map(command => `**${process.env.BOT_PREFIX+command.name}**${command.arguments.map(a => ` \`${a.label}\``)} | *${command.description}*`).join('\n'), true)
             .setFooter('This bot has been written by jdwoj5butbetter#1132.')
             .setThumbnail(guild.iconURL())
+            // .addField('Description', 'This bot is used to deliver products to users who buy them. It is also used for account linking and to get user information.', true)
+        bot.commands.array().map(command => ThisEmbed.addField(process.env.BOT_PREFIX+command.name+command.arguments.map(a => ` \`${a.label}\``), `*${command.description}*`, true))
         await message.channel.send(ThisEmbed)
 	}
 };
