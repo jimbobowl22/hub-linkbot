@@ -8,7 +8,7 @@ const fs = require('fs');
 const express = require('express');
 const rateLimit = require("express-rate-limit");
 const editJsonFile = require('edit-json-file');
-const { v5: uuid } = require('uuid');
+const { v5 } = require('uuid');
 const rbx = require('noblox.js');
 var http = require('http');
 // var https = require('https');
@@ -262,7 +262,7 @@ app.get('/user/:robloxid/', async (request, response) => {
             return result;
         }
         let linkCode = randomString(6, 'a#');
-        let index = uuid(request.params.robloxid, process.env.UUID_NAMESPACE);
+        let index = v5(request.params.robloxid, process.env.UUID_NAMESPACE);
         let value = {
             robloxId: request.params.robloxid,
             robloxUsername: robloxUser.username,
