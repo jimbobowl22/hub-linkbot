@@ -136,9 +136,9 @@ function GetURL(Endpoint)
 	return 'http://'..URL..Endpoint.."?key="..Key;
 end;
 local HttpService = {
-	GetAsync = function(URL)
+	GetAsync = function(ResURL)
 		local Request = game:GetService('HttpService'):RequestAsync({
-			Url = URL;
+			Url = ResURL;
 			Method = "GET";
 		});
 		if not Request.Success then
