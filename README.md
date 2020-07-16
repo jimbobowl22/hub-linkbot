@@ -149,7 +149,6 @@ local HttpService = {
 	end;
 };
 local Module = {};
-local UserCache = {};
 Module.GetStatus = function(ID)
 	local Status, Data = HttpService.GetAsync(GetURL('/'));
 	if not Data then
@@ -162,16 +161,17 @@ Module.GetStatus = function(ID)
 end;
 Module.GetUserProducts = function(ID)
 	local Status, Data = HttpService.GetAsync(GetURL('/user/'..ID));
-	return Data;
+	return Data.value.products;
 end;
 Module.GetVerifyStatus = function(ID)
 	local Status, Data = HttpService.GetAsync(GetURL('/user/'..ID));
-	return Data.verify.status;
+	return Data.value.verify.status;
 end;
 Module.GetLinkCode = function(ID)
 	local Status, Data = HttpService.GetAsync(GetURL('/user/'..ID));
-	if Data.verify.status == 'link' then
-		return Data.verify.value;
+	print(game:GetService('HttpService'):JSONEncode(Data))
+	if Data.value.verify.status == 'link' then
+		return Data.value.verify.value;
 	else
 		return false;
 	end;
@@ -179,7 +179,7 @@ end;
 Module.WaitForVerify = function(ID)
 	while true do
 		local Status, Data = HttpService.GetAsync(GetURL('/user/'..ID));
-		if Data.verify.status == 'complete' then
+		if Data.value.verify.status == 'complete' then
 			return;
 		end;
 		wait(2);
@@ -187,11 +187,11 @@ Module.WaitForVerify = function(ID)
 end;
 Module.GetAllProducts = function(ID)
 	local Status, Data = HttpService.GetAsync(GetURL('/products'));
-	return Data;
+	return Data.products;
 end;
 Module.WhitelistUser = function(Product, ID)
 	local Status, Data = HttpService.GetAsync(GetURL('/products/give/'..Product..'/'..ID));
-	return Data;
+	return Data.dm;
 end;
 Module.RevokeUser = function(Product, ID)
 	local Status, Data = HttpService.GetAsync(GetURL('/products/revoke/'..Product..'/'..ID));
