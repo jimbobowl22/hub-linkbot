@@ -151,7 +151,7 @@ local HttpService = {
 local Module = {};
 local UserCache = {};
 Module.GetStatus = function(ID)
-	local Status, Data = HttpService:GetAsync(GetURL('/'));
+	local Status, Data = HttpService.GetAsync(GetURL('/'));
 	if not Data then
 		return false;
 	end;
@@ -161,15 +161,15 @@ Module.GetStatus = function(ID)
 	return false;
 end;
 Module.GetUserProducts = function(ID)
-	local Status, Data = HttpService:GetAsync(GetURL('/user/'..ID));
+	local Status, Data = HttpService.GetAsync(GetURL('/user/'..ID));
 	return Data;
 end;
 Module.GetVerifyStatus = function(ID)
-	local Status, Data = HttpService:GetAsync(GetURL('/user/'..ID));
+	local Status, Data = HttpService.GetAsync(GetURL('/user/'..ID));
 	return Data.verify.status;
 end;
 Module.GetLinkCode = function(ID)
-	local Status, Data = HttpService:GetAsync(GetURL('/user/'..ID));
+	local Status, Data = HttpService.GetAsync(GetURL('/user/'..ID));
 	if Data.verify.status == 'link' then
 		return Data.verify.value;
 	else
@@ -178,7 +178,7 @@ Module.GetLinkCode = function(ID)
 end;
 Module.WaitForVerify = function(ID)
 	while true do
-		local Status, Data = HttpService:GetAsync(GetURL('/user/'..ID));
+		local Status, Data = HttpService.GetAsync(GetURL('/user/'..ID));
 		if Data.verify.status == 'complete' then
 			return;
 		end;
@@ -186,15 +186,15 @@ Module.WaitForVerify = function(ID)
 	end;
 end;
 Module.GetAllProducts = function(ID)
-	local Status, Data = HttpService:GetAsync(GetURL('/products'));
+	local Status, Data = HttpService.GetAsync(GetURL('/products'));
 	return Data;
 end;
 Module.WhitelistUser = function(Product, ID)
-	local Status, Data = HttpService:GetAsync(GetURL('/products/give/'..Product..'/'..ID));
+	local Status, Data = HttpService.GetAsync(GetURL('/products/give/'..Product..'/'..ID));
 	return Data;
 end;
 Module.RevokeUser = function(Product, ID)
-	local Status, Data = HttpService:GetAsync(GetURL('/products/revoke/'..Product..'/'..ID));
+	local Status, Data = HttpService.GetAsync(GetURL('/products/revoke/'..Product..'/'..ID));
 end;
 return Module;
 ```
