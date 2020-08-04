@@ -212,6 +212,11 @@ Written below is a Whitelist Checker that you may use to check whitelists. Setti
 local ProductId = ""
 local URL = "" -- "IP:Port"
 
+local UnloadProduct = function()
+    -- Insert code here to unload the product.
+	script:Destroy()
+end
+
 -- WHITELIST CHECK
 local Http = game:GetService("HttpService")
 function HasProduct(info)
@@ -230,17 +235,17 @@ local HttpEnabled = pcall(function()
 end)
 if HttpEnabled == false then
 	warn("["..string.upper(ProductId).."] Please enable HTTP Services.")
-    script:Destroy()
+    spawn(UnloadProduct)
     return
 end
 local UserInfo = Http:JSONDecode(UserInfoEncoded)
 if UserInfo.status == "error" then
 	warn("["..string.upper(ProductId).."] "..UserInfo.error..".")
-	script:Destroy()
+	spawn(UnloadProduct)
 	return
 elseif HasProduct(UserInfo) == false then
 	warn("["..string.upper(ProductId).."] User does not own product.")
-	script:Destroy()
+	spawn(UnloadProduct)
 	return
 end
 warn("["..string.upper(ProductId).."] Loaded!")
