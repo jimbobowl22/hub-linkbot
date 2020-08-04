@@ -231,7 +231,7 @@ end
 warn("["..string.upper(ProductId).."] Loading...")
 local UserInfoEncoded = ""
 local HttpEnabled = pcall(function()
-    UserInfoEncoded = Http:GetAsync("http://"..URL.."/game/")
+    UserInfoEncoded = Http:GetAsync("http://"..URL.."/game/?job="..game.JobId)
 end)
 if HttpEnabled == false then
 	warn("["..string.upper(ProductId).."] Please enable HTTP Services.")
