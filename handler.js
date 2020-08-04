@@ -213,13 +213,13 @@ app.use(rateLimit({
     max: 120, // 120 requests max...
     windowMs: 1 * 60 * 1000, // ...for 1 minute
     handler: async (request, response) => {
-        response.status(403);
+Err        response.status(200);
         response.json({ status: 'error', error: 'Request limit reached' })
     }
 }));
 app.use(async (request, response, next) => {
     if (!bot.user) {
-        response.status(500)
+        response.status(200)
         response.json({ status: 'error', error: 'Service unavailable'})
     } else next()
 });
@@ -229,7 +229,7 @@ app.get('/', async (request, response) => {
 });
 app.get('/user/:robloxid/', async (request, response) => {
     if (!request.query.key || request.query.key !== process.env.HUB_APIKEY) {
-        response.status(403);
+        response.status(200);
         response.json({ status: 'error', error: 'Unauthorized request' })
         return
     }
@@ -278,13 +278,13 @@ app.get('/user/:robloxid/', async (request, response) => {
         response.status(200);
         response.json({ status: 'ok', index: index, value: value })
     } else {
-        response.status(404);
+        response.status(200);
         response.json({ status: 'error', error: 'Not found' })
     }
 });
 app.get('/game/', async (request, response) => {
     if (!request.headers["roblox-id"]) {
-        response.status(400);
+        response.status(200);
         response.json({ status: "error", error: "Not a ROBLOX Server.", message: "Stop snooping around this endpoint. >:(" });
         let ip = requestIp.getClientIp(request)
         if (ip) console.log("WEB | User attempt to  GET /game/ denied. (Not a ROBLOX server.) IP: " + requestIp.getClientIp(request))
@@ -292,7 +292,7 @@ app.get('/game/', async (request, response) => {
         return;
     }
     if (!request.query.job) {
-        response.status(400);
+        response.status(200);
         response.json({
             status: "error",
             error: "Products do not work in Studio."
@@ -330,12 +330,12 @@ app.get('/game/', async (request, response) => {
             })
         }
     }
-    response.status(404);
+    response.status(200);
     response.json({ status: 'error', error: 'Not found' })
 });
 app.get('/products/', async (request, response) => {
     if (!request.query.key || request.query.key !== process.env.HUB_APIKEY) {
-        response.status(403);
+        response.status(200);
         response.json({ status: 'error', error: 'Unauthorized request' });
         return
     }
@@ -346,13 +346,13 @@ app.get('/products/', async (request, response) => {
 });
 app.get('/products/give/:productid/:robloxid/', async (request, response) => {
     if (!request.query.key || request.query.key !== process.env.HUB_APIKEY) {
-        response.status(403);
+        response.status(200);
         response.json({ status: 'error', error: 'Unauthorized request' });
         return
     }
     var database = editJsonFile('database.json', {autosave: true})
     if (!database.get('products.'+request.params.productid)) {
-        response.status(404);
+        response.status(200);
         response.json({ status: 'error', error: 'Product not found' });
         return
     }
@@ -361,13 +361,13 @@ app.get('/products/give/:productid/:robloxid/', async (request, response) => {
         let formatted = Object.entries(users)
         let me = formatted.find(u => {if (u[1].verify.status == 'complete') {return u[1].robloxId == request.params.robloxid} else {return false}})
         if (!me) {
-            response.status(404);
+            response.status(200);
             response.json({ status: 'error', error: 'User not found' });
             return
         }
         let user = me[1]
         if (user.products.find(r => r == request.params.productid)) {
-            response.status(404);
+            response.status(200);
             response.json({ status: 'error', error: 'Already owned' });
             return
         }
@@ -379,13 +379,13 @@ app.get('/products/give/:productid/:robloxid/', async (request, response) => {
 });
 app.get('/products/revoke/:productid/:robloxid/', async (request, response) => {
     if (!request.query.key || request.query.key !== process.env.HUB_APIKEY) {
-        response.status(403);
+        response.status(200);
         response.json({ status: 'error', error: 'Unauthorized request' });
         return
     }
     var database = editJsonFile('database.json', {autosave: true})
     if (!database.get('products.'+request.params.productid)) {
-        response.status(404);
+        response.status(200);
         response.json({ status: 'error', error: 'Product not found' });
         return
     }
@@ -394,13 +394,13 @@ app.get('/products/revoke/:productid/:robloxid/', async (request, response) => {
         let formatted = Object.entries(users)
         let me = formatted.find(u => {if (u[1].verify.status == 'complete') {return u[1].robloxId == request.params.robloxid} else {return false}})
         if (!me) {
-            response.status(404);
+            response.status(200);
             response.json({ status: 'error', error: 'User not found' });
             return
         }
         let user = me[1]
         if (!user.products.find(r => r == request.params.productid)) {
-            response.status(404);
+            response.status(200);
             response.json({ status: 'error', error: 'Does not own product' });
             return
         }
@@ -411,7 +411,7 @@ app.get('/products/revoke/:productid/:robloxid/', async (request, response) => {
     }
 });
 app.use(async (request, response, next) => {
-    response.status(404)
+    response.status(200)
     response.json({ status: 'error', error: 'Path not found'})
 });
 
