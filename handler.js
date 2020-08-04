@@ -213,7 +213,7 @@ app.use(rateLimit({
     max: 120, // 120 requests max...
     windowMs: 1 * 60 * 1000, // ...for 1 minute
     handler: async (request, response) => {
-Err        response.status(200);
+        response.status(200);
         response.json({ status: 'error', error: 'Request limit reached' })
     }
 }));
