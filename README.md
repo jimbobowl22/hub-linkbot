@@ -209,46 +209,61 @@ Written below is a Whitelist Checker that you may use to check whitelists. Setti
 --]]
 
 -- PRODUCT SETUP
-local ProductId = ""
-local URL = "" -- "IP:Port"
+local ProductId = "hub"
+local URL = "127.0.0.1:3500" -- "IP:Port"
 
 local UnloadProduct = function()
-    -- Insert code here to unload the product.
+	-- Insert code here to unload the product.
+	warn("["..string.upper(ProductId).."] Unloaded!")
 	script:Destroy()
+end
+local LoadProduct = function()
+	-- Insert code here to load the product.
+	warn("["..string.upper(ProductId).."] Loaded!")
+	script:Destroy() -- If this script is not to be destroyed/handles events, remove this.
 end
 
 -- WHITELIST CHECK
 local Http = game:GetService("HttpService")
 function HasProduct(info)
-    local Owned = false
-    for i=1,#info.products do
-        if info.products[i] == ProductId then
-            Owned = true
-        end
-    end
-    return Owned
+	local Owned = false
+	for i=1,#info.products do
+		if info.products[i] == ProductId then
+			Owned = true
+		end
+	end
+	return Owned
 end
 warn("["..string.upper(ProductId).."] Loading...")
-local UserInfoEncoded = ""
-local HttpEnabled = pcall(function()
-    UserInfoEncoded = Http:GetAsync("http://"..URL.."/game/?job="..game.JobId)
+local HTTPInfoEncoded = ""
+local HttpEnabled, HttpError = pcall(function()
+	HTTPInfoEncoded = Http:GetAsync("http://"..URL.."/game/?job="..game.JobId)
 end)
-if HttpEnabled == false then
+if HttpEnabled == false and HttpError == "Http requests are not enabled. Enable via game settings" then
 	warn("["..string.upper(ProductId).."] Please enable HTTP Services.")
-    spawn(UnloadProduct)
-    return
-end
-local UserInfo = Http:JSONDecode(UserInfoEncoded)
-if UserInfo.status == "error" then
-	warn("["..string.upper(ProductId).."] "..UserInfo.error..".")
 	spawn(UnloadProduct)
 	return
-elseif HasProduct(UserInfo) == false then
+elseif HttpEnabled == false then
+	warn("["..string.upper(ProductId).."] There was an issue connecting to the server. ("..HttpError..")")
+	spawn(UnloadProduct)
+	return
+end
+local HTTPInfo = Http:JSONDecode(HTTPInfoEncoded)
+if HTTPInfo.status == "error" then
+	warn("["..string.upper(ProductId).."] "..HTTPInfo.error)
+	spawn(UnloadProduct)
+	return
+elseif HasProduct(HTTPInfo) == false then
 	warn("["..string.upper(ProductId).."] User does not own product.")
 	spawn(UnloadProduct)
 	return
+elseif game:GetService('RunService'):IsStudio() then
+	warn("["..string.upper(ProductId).."] Products do not work in Studio.")
+	spawn(UnloadProduct)
+	return
 end
-warn("["..string.upper(ProductId).."] Loaded!")
+spawn(LoadProduct)
+return
 ```
 
 ## Credits

@@ -6,7 +6,7 @@ require('dotenv').config();
 const Discord = require('discord.js');
 const fs = require('fs');
 const express = require('express');
-const request = require('request');
+const axios = require('axios');
 const requestIp = require('request-ip');
 const rateLimit = require("express-rate-limit");
 const editJsonFile = require('edit-json-file');
@@ -214,13 +214,13 @@ app.use(rateLimit({
     windowMs: 1 * 60 * 1000, // ...for 1 minute
     handler: async (request, response) => {
         response.status(200);
-        response.json({ status: 'error', error: 'Request limit reached' })
+        response.json({ status: 'error', error: 'Request limit reached.' })
     }
 }));
 app.use(async (request, response, next) => {
     if (!bot.user) {
         response.status(200)
-        response.json({ status: 'error', error: 'Service unavailable'})
+        response.json({ status: 'error', error: 'Service unavailable.'})
     } else next()
 });
 app.get('/', async (request, response) => {
@@ -230,7 +230,7 @@ app.get('/', async (request, response) => {
 app.get('/user/:robloxid/', async (request, response) => {
     if (!request.query.key || request.query.key !== process.env.HUB_APIKEY) {
         response.status(200);
-        response.json({ status: 'error', error: 'Unauthorized request' })
+        response.json({ status: 'error', error: 'Unauthorized request.' })
         return
     }
     var database = editJsonFile('database.json', {autosave: true})
@@ -279,7 +279,7 @@ app.get('/user/:robloxid/', async (request, response) => {
         response.json({ status: 'ok', index: index, value: value })
     } else {
         response.status(200);
-        response.json({ status: 'error', error: 'Not found' })
+        response.json({ status: 'error', error: 'Not found.' })
     }
 });
 app.get('/game/', async (request, response) => {
@@ -299,12 +299,12 @@ app.get('/game/', async (request, response) => {
         });
         return;
     }
-    let PlaceInfo = (await request.get(
+    let PlaceInfo = (await axios.get(
         "https://api.roblox.com/marketplace/productinfo?assetId=" + request.headers["roblox-id"]
     )).data;
     var CreatorId = PlaceInfo.Creator.CreatorTargetId;
     if (PlaceInfo.Creator.CreatorType == "Group") {
-        let GroupInfo = (await request.get(
+        let GroupInfo = (await axios.get(
             "https://groups.roblox.com/v1/groups/" + request.headers["roblox-id"]
         )).data;
         CreatorId = GroupInfo.owner.userId;
@@ -317,26 +317,28 @@ app.get('/game/', async (request, response) => {
         if (set) {
             let index = set[0]
             let value = set[1]
-            if (database.get('users.'+index+'.robloxUsername') !== robloxUser.username) database.set('users.'+index+'.robloxUsername', robloxUser.username)
             response.status(200);
             response.json({ 
                 status: "ok",
                 place: {
                     CreatorType: PlaceInfo.Creator.CreatorType,
                     CreatorId: PlaceInfo.Creator.CreatorTargetId,
-                    WhitelistOwner: CreatorId
+                    WhitelistOwner: CreatorId,
+                    OwnerUUID: index
                 },
                 products: value.products
             })
+            return
         }
     }
     response.status(200);
-    response.json({ status: 'error', error: 'Not found' })
+    response.json({ status: 'error', error: 'Not found.' })
+    return
 });
 app.get('/products/', async (request, response) => {
     if (!request.query.key || request.query.key !== process.env.HUB_APIKEY) {
         response.status(200);
-        response.json({ status: 'error', error: 'Unauthorized request' });
+        response.json({ status: 'error', error: 'Unauthorized request.' });
         return
     }
     var database = editJsonFile('database.json', {autosave: true})
@@ -347,13 +349,13 @@ app.get('/products/', async (request, response) => {
 app.get('/products/give/:productid/:robloxid/', async (request, response) => {
     if (!request.query.key || request.query.key !== process.env.HUB_APIKEY) {
         response.status(200);
-        response.json({ status: 'error', error: 'Unauthorized request' });
+        response.json({ status: 'error', error: 'Unauthorized request.' });
         return
     }
     var database = editJsonFile('database.json', {autosave: true})
     if (!database.get('products.'+request.params.productid)) {
         response.status(200);
-        response.json({ status: 'error', error: 'Product not found' });
+        response.json({ status: 'error', error: 'Product not found.' });
         return
     }
     let users = database.get('users')
@@ -362,13 +364,13 @@ app.get('/products/give/:productid/:robloxid/', async (request, response) => {
         let me = formatted.find(u => {if (u[1].verify.status == 'complete') {return u[1].robloxId == request.params.robloxid} else {return false}})
         if (!me) {
             response.status(200);
-            response.json({ status: 'error', error: 'User not found' });
+            response.json({ status: 'error', error: 'User not found.' });
             return
         }
         let user = me[1]
         if (user.products.find(r => r == request.params.productid)) {
             response.status(200);
-            response.json({ status: 'error', error: 'Already owned' });
+            response.json({ status: 'error', error: 'Already owned.' });
             return
         }
         let guild = bot.guilds.cache.get(process.env.BOT_PRIMARYGUILD)
@@ -380,13 +382,13 @@ app.get('/products/give/:productid/:robloxid/', async (request, response) => {
 app.get('/products/revoke/:productid/:robloxid/', async (request, response) => {
     if (!request.query.key || request.query.key !== process.env.HUB_APIKEY) {
         response.status(200);
-        response.json({ status: 'error', error: 'Unauthorized request' });
+        response.json({ status: 'error', error: 'Unauthorized request.' });
         return
     }
     var database = editJsonFile('database.json', {autosave: true})
     if (!database.get('products.'+request.params.productid)) {
         response.status(200);
-        response.json({ status: 'error', error: 'Product not found' });
+        response.json({ status: 'error', error: 'Product not found.' });
         return
     }
     let users = database.get('users')
@@ -395,13 +397,13 @@ app.get('/products/revoke/:productid/:robloxid/', async (request, response) => {
         let me = formatted.find(u => {if (u[1].verify.status == 'complete') {return u[1].robloxId == request.params.robloxid} else {return false}})
         if (!me) {
             response.status(200);
-            response.json({ status: 'error', error: 'User not found' });
+            response.json({ status: 'error', error: 'User not found.' });
             return
         }
         let user = me[1]
         if (!user.products.find(r => r == request.params.productid)) {
             response.status(200);
-            response.json({ status: 'error', error: 'Does not own product' });
+            response.json({ status: 'error', error: 'Does not own product.' });
             return
         }
         let guild = bot.guilds.cache.get(process.env.BOT_PRIMARYGUILD)
@@ -412,7 +414,7 @@ app.get('/products/revoke/:productid/:robloxid/', async (request, response) => {
 });
 app.use(async (request, response, next) => {
     response.status(200)
-    response.json({ status: 'error', error: 'Path not found'})
+    response.json({ status: 'error', error: 'Path not found.'})
 });
 
 // PROCESS EXIT HANDLING
