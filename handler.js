@@ -244,8 +244,14 @@ app.get('/user/:robloxid/', async (request, response) => {
                 let index = set[0]
                 let value = set[1]
                 if (database.get('users.'+index+'.robloxUsername') !== robloxUser.username) database.set('users.'+index+'.robloxUsername', robloxUser.username)
-                response.status(200);
-                response.json({ status: 'ok', index: index, value: value })
+                let ThisEmbed = new Discord.MessageEmbed()
+                    .setColor(Number(process.env.BOT_EMBEDCOLOR))
+                    .setAuthor(message.author.username, message.author.displayAvatarURL())
+                    .setTitle('**Force Link Information**')
+                    .addField('Status', ':x: **Incomplete!**', true)
+                    .addField('Error', 'User already linked.', true)
+                    .setThumbnail(guild.iconURL())
+                await message.channel.send(ThisEmbed)
                 return
             }
         } 

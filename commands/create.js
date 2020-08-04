@@ -80,7 +80,7 @@ module.exports = {
                 await m.edit(ThisEmbed)
                 return
             }
-            let index = args.shift()
+            let index = toLowerCase(args.shift())
             let name = args.join(' ')
             let ext = fileMessage.attachments.first().url.split('.')
             request.get(fileMessage.attachments.first().url)
@@ -96,7 +96,7 @@ module.exports = {
                 .setThumbnail(guild.iconURL())
             await m.edit(ThisEmbed)
         } else {
-            let index = args.shift()
+            let index = toLowerCase(args.shift())
             let name = args.join(' ')
             let ext = message.attachments.first().url.split('.')
             request.get(message.attachments.first().url)
