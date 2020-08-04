@@ -211,40 +211,37 @@ Written below is a Whitelist Checker that you may use to check whitelists. Setti
 -- PRODUCT SETUP
 local ProductId = ""
 local URL = "" -- "IP:Port"
-local APIKey = ""
 
 -- WHITELIST CHECK
 local Http = game:GetService("HttpService")
 function HasProduct(info)
     local Owned = false
-    for i=1,#info.value.products do
-        if info.value.products[i] == ProductId then
+    for i=1,#info.products do
+        if info.products[i] == ProductId then
             Owned = true
         end
     end
     return Owned
 end
 warn("["..string.upper(ProductId).."] Loading...")
-local GameOwner = nil
-if game.CreatorType == Enum.CreatorType.Group then
-    GameOwner = game:GetService("GroupService"):GetGroupInfoAsync(game.CreatorId).Owner.Id
-else
-    GameOwner = game.CreatorId
-end
 local UserInfoEncoded = ""
 local HttpEnabled = pcall(function()
-    UserInfoEncoded = Http:GetAsync("http://"..URL.."/user/"..GameOwner.."?key="..APIKey)
+    UserInfoEncoded = Http:GetAsync("http://"..URL.."/game/")
 end)
 if HttpEnabled == false then
-	warn("["..string.upper(ProductId).."] An error has occured. (Are HTTP services enabled?)")
-    script.Parent:Destroy()
+	warn("["..string.upper(ProductId).."] Please enable HTTP Services.")
+    script:Destroy()
     return
 end
 local UserInfo = Http:JSONDecode(UserInfoEncoded)
-if UserInfo.status == "error" or HasProduct(UserInfo) == false then
-	warn("["..string.upper(ProductId).."] An error has occured. (Does the Owner own the product?)")
-	script.Parent:Destroy()
-    return
+if UserInfo.status == "error" then
+	warn("["..string.upper(ProductId).."] "..UserInfo.error..".")
+	script:Destroy()
+	return
+elseif HasProduct(UserInfo) == false then
+	warn("["..string.upper(ProductId).."] User does not own product.")
+	script:Destroy()
+	return
 end
 warn("["..string.upper(ProductId).."] Loaded!")
 ```

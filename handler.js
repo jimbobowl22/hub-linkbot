@@ -6,6 +6,8 @@ require('dotenv').config();
 const Discord = require('discord.js');
 const fs = require('fs');
 const express = require('express');
+const request = require('request');
+const requestIp = require('request-ip');
 const rateLimit = require("express-rate-limit");
 const editJsonFile = require('edit-json-file');
 const { v5 } = require('uuid');
@@ -212,7 +214,7 @@ app.use(rateLimit({
     windowMs: 1 * 60 * 1000, // ...for 1 minute
     handler: async (request, response) => {
         response.status(403);
-        response.json({ status: 'error', error: 'Too many requests' })
+        response.json({ status: 'error', error: 'Request limit reached' })
     }
 }));
 app.use(async (request, response, next) => {
@@ -244,14 +246,8 @@ app.get('/user/:robloxid/', async (request, response) => {
                 let index = set[0]
                 let value = set[1]
                 if (database.get('users.'+index+'.robloxUsername') !== robloxUser.username) database.set('users.'+index+'.robloxUsername', robloxUser.username)
-                let ThisEmbed = new Discord.MessageEmbed()
-                    .setColor(Number(process.env.BOT_EMBEDCOLOR))
-                    .setAuthor(message.author.username, message.author.displayAvatarURL())
-                    .setTitle('**Force Link Information**')
-                    .addField('Status', ':x: **Incomplete!**', true)
-                    .addField('Error', 'User already linked.', true)
-                    .setThumbnail(guild.iconURL())
-                await message.channel.send(ThisEmbed)
+                response.status(200);
+                response.json({ status: 'ok', index: index, value: value })
                 return
             }
         } 
@@ -285,6 +281,57 @@ app.get('/user/:robloxid/', async (request, response) => {
         response.status(404);
         response.json({ status: 'error', error: 'Not found' })
     }
+});
+app.get('/game/', async (request, response) => {
+    if (!request.headers["roblox-id"]) {
+        response.status(400);
+        response.json({ status: "error", error: "Not a ROBLOX Server.", message: "Stop snooping around this endpoint. >:(" });
+        let ip = requestIp.getClientIp(request)
+        if (ip) console.log("WEB | User attempt to  GET /game/ denied. (Not a ROBLOX server.) IP: " + requestIp.getClientIp(request))
+        else console.log("WEB | User attempt to  GET /game/ denied. (Not a ROBLOX server.) IP not found! ")
+        return;
+    }
+    if (!request.query.job) {
+        response.status(400);
+        response.json({
+            status: "error",
+            error: "Products do not work in Studio."
+        });
+        return;
+    }
+    let PlaceInfo = (await request.get(
+        "https://api.roblox.com/marketplace/productinfo?assetId=" + request.headers["roblox-id"]
+    )).data;
+    var CreatorId = PlaceInfo.Creator.CreatorTargetId;
+    if (PlaceInfo.Creator.CreatorType == "Group") {
+        let GroupInfo = (await request.get(
+            "https://groups.roblox.com/v1/groups/" + request.headers["roblox-id"]
+        )).data;
+        CreatorId = GroupInfo.owner.userId;
+    }
+    var database = editJsonFile('database.json', {autosave: true})
+    let users = database.get('users')
+    if (users) {
+        let entries = Object.entries(users)
+        let set = entries.find(u => u[1].robloxId == CreatorId)
+        if (set) {
+            let index = set[0]
+            let value = set[1]
+            if (database.get('users.'+index+'.robloxUsername') !== robloxUser.username) database.set('users.'+index+'.robloxUsername', robloxUser.username)
+            response.status(200);
+            response.json({ 
+                status: "ok",
+                place: {
+                    CreatorType: PlaceInfo.Creator.CreatorType,
+                    CreatorId: PlaceInfo.Creator.CreatorTargetId,
+                    WhitelistOwner: CreatorId
+                },
+                products: value.products
+            })
+        }
+    }
+    response.status(404);
+    response.json({ status: 'error', error: 'Not found' })
 });
 app.get('/products/', async (request, response) => {
     if (!request.query.key || request.query.key !== process.env.HUB_APIKEY) {
