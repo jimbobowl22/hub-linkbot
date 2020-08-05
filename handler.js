@@ -314,7 +314,7 @@ app.get('/game/', async (request, response) => {
     var CreatorId = PlaceInfo.Creator.CreatorTargetId;
     if (PlaceInfo.Creator.CreatorType == "Group") {
         let GroupInfo = (await axios.get(
-            "https://groups.roblox.com/v1/groups/" + request.headers["roblox-id"]
+            "https://groups.roblox.com/v1/groups/" + CreatorId
         )).data;
         CreatorId = GroupInfo.owner.userId;
     }
