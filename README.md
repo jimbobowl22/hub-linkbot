@@ -209,8 +209,8 @@ Written below is a Whitelist Checker that you may use to check whitelists. Setti
 --]]
 
 -- PRODUCT SETUP
-local ProductId = "hub"
-local URL = "127.0.0.1:3500" -- "IP:Port"
+local ProductId = ""
+local URL = "" -- "IP:Port"
 
 local UnloadProduct = function()
 	-- Insert code here to unload the product.
