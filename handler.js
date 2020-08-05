@@ -299,9 +299,18 @@ app.get('/game/', async (request, response) => {
         });
         return;
     }
-    let PlaceInfo = (await axios.get(
+    var returning = false
+    let { data: PlaceInfo } = await axios.get(
         "https://api.roblox.com/marketplace/productinfo?assetId=" + request.headers["roblox-id"]
-    )).data;
+    ).catch(err => {returning = true})
+    if (returning) {
+        response.status(200);
+        response.json({ status: "error", error: "Not a ROBLOX Server.", message: "Stop snooping around this endpoint. >:(" });
+        let ip = requestIp.getClientIp(request)
+        if (ip) console.log("WEB | User attempt to  GET /game/ denied. (Not a ROBLOX server.) IP: " + requestIp.getClientIp(request))
+        else console.log("WEB | User attempt to  GET /game/ denied. (Not a ROBLOX server.) IP not found! ")
+        return;
+    }
     var CreatorId = PlaceInfo.Creator.CreatorTargetId;
     if (PlaceInfo.Creator.CreatorType == "Group") {
         let GroupInfo = (await axios.get(
