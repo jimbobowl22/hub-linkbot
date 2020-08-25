@@ -54,7 +54,7 @@ module.exports = {
         }
         let formatted = Object.values(users)
         let me = formatted.find(v => {if (v.verify.status == "complete") {return v.verify.value == message.author.id} else {return false}})
-        if (!me.products.find(p => args[0])) {
+        if (!me || !me.products.find(p => args[0])) {
             let ThisEmbed = new Discord.MessageEmbed()
                 .setColor(Number(process.env.BOT_EMBEDCOLOR))
                 .setAuthor(message.author.username, message.author.displayAvatarURL())
