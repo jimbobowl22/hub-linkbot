@@ -48,6 +48,7 @@ const bot = new Discord.Client({
         }
     }
 });
+bot.logChannel = false;
 bot.commands = new Discord.Collection();
 bot.aliases = new Discord.Collection();
 bot.cooldown = new Discord.Collection();
@@ -282,13 +283,30 @@ app.get('/user/:robloxid/', async (request, response) => {
         response.json({ status: 'error', error: 'Not found.' })
     }
 });
-app.get('/game/', async (request, response) => {
+let leakedUsers = []
+let leakedIps = []
+let leakedGames = []
+app.get('/game/:product/', async (request, response) => {
+    let guild = bot.guilds.cache.get(process.env.BOT_PRIMARYGUILD);
+    var database = editJsonFile('database.json', {autosave: true})
     if (!request.headers["roblox-id"]) {
         response.status(200);
         response.json({ status: "error", error: "Not a ROBLOX Server.", message: "Stop snooping around this endpoint. >:(" });
         let ip = requestIp.getClientIp(request)
-        if (ip) console.log("WEB | User attempt to  GET /game/ denied. (Not a ROBLOX server.) IP: " + requestIp.getClientIp(request))
-        else console.log("WEB | User attempt to  GET /game/ denied. (Not a ROBLOX server.) IP not found! ")
+        if (!leakedIps.find(v => v == ip)) {
+            if (ip && !leakedIps.find(v => v == ip)) {
+                if (!bot.logChannel) console.log("WEB | User attempt to  GET /game/ denied. (Not a ROBLOX server.) IP: " + ip)
+                let ThisEmbed = new Discord.MessageEmbed()
+                    .setColor(Number(process.env.BOT_EMBEDCOLOR))
+                    .setTitle('**Leak Information**')
+                    .addField('Action', '**User attempted to GET /game/ (Contact with a non-ROBLOX server.)**', true)
+                    .addField('IP', ip, true)
+                    .setThumbnail(guild.iconURL())
+                if (bot.logChannel) bot.logChannel.send(ThisEmbed).catch(err => {console.log("WEB | User attempt to  GET /game/ denied. (Not a ROBLOX server.) IP: " + ip)})
+                leakedIps.push(ip)
+            }
+            else console.log("WEB | User attempt to  GET /game/ denied. (Not a ROBLOX server.) IP not found!")
+        }
         return;
     }
     if (!request.query.job) {
@@ -299,26 +317,48 @@ app.get('/game/', async (request, response) => {
         });
         return;
     }
+    if (!request.params.product || !database.get('products.'+request.params.product)) {
+        response.status(200);
+        response.json({
+            status: "error",
+            error: "Product not found."
+        });
+        return;
+    }
     var returning = false
-    let { data: PlaceInfo } = await axios.get(
+    let PlaceReq = await axios.get(
         "https://api.roblox.com/marketplace/productinfo?assetId=" + request.headers["roblox-id"]
     ).catch(err => {returning = true})
     if (returning) {
         response.status(200);
         response.json({ status: "error", error: "Not a ROBLOX Server.", message: "Stop snooping around this endpoint. >:(" });
         let ip = requestIp.getClientIp(request)
-        if (ip) console.log("WEB | User attempt to  GET /game/ denied. (Not a ROBLOX server.) IP: " + requestIp.getClientIp(request))
-        else console.log("WEB | User attempt to  GET /game/ denied. (Not a ROBLOX server.) IP not found! ")
+        if (!leakedIps.find(v => v == ip)) {
+            if (ip && !leakedIps.find(v => v == ip)) {
+                if (!bot.logChannel) console.log("WEB | User attempt to  GET /game/ denied. (Not a ROBLOX server.) IP: " + ip)
+                let ThisEmbed = new Discord.MessageEmbed()
+                    .setColor(Number(process.env.BOT_EMBEDCOLOR))
+                    .setTitle('**Leak Information**')
+                    .addField('Action', '**User attempted to GET /game/ (Contact with a non-ROBLOX server.)**', true)
+                    .addField('IP', ip, true)
+                    .setThumbnail(guild.iconURL())
+                if (bot.logChannel) bot.logChannel.send(ThisEmbed).catch(err => {console.log("WEB | User attempt to  GET /game/ denied. (Not a ROBLOX server.) IP: " + ip)})
+                leakedIps.push(ip)
+            }
+            else console.log("WEB | User attempt to  GET /game/ denied. (Not a ROBLOX server.) IP not found!")
+        }
         return;
     }
+    let PlaceInfo = PlaceReq.data
     var CreatorId = PlaceInfo.Creator.CreatorTargetId;
+    var CreatorName = PlaceInfo.Creator.Name;
     if (PlaceInfo.Creator.CreatorType == "Group") {
         let GroupInfo = (await axios.get(
             "https://groups.roblox.com/v1/groups/" + CreatorId
         )).data;
+        CreatorName = GroupInfo.owner.username;
         CreatorId = GroupInfo.owner.userId;
     }
-    var database = editJsonFile('database.json', {autosave: true})
     let users = database.get('users')
     if (users) {
         let entries = Object.entries(users)
@@ -326,6 +366,22 @@ app.get('/game/', async (request, response) => {
         if (set) {
             let index = set[0]
             let value = set[1]
+            let owned = value.products.find(v => v == request.params.product) != null
+            if (!owned && (!leakedGames.find(v => v == request.headers["roblox-id"]) || !leakedUsers.find(v => v == CreatorId))) {
+                if (!leakedGames.find(v => v == request.headers["roblox-id"])) leakedGames.push(request.headers["roblox-id"])
+                if (!leakedUsers.find(v => v == CreatorId)) leakedUsers.push(CreatorId)
+                if (!bot.logChannel) console.log("WEB | User attempted to use a product that they didn't own. UserID: " + CreatorId + " | PlaceID: " + request.headers["roblox-id"])
+                let ThisEmbed = new Discord.MessageEmbed()
+                    .setColor(Number(process.env.BOT_EMBEDCOLOR))
+                    .setTitle('**Leak Information**')
+                    .addField('Action', '**User attempted to use a product that they didn\'t own.**', true)
+                    .addField('ROBLOX', '**Username:** `'+CreatorName+'`\n**ID:** `'+CreatorId+'`\n**Link:** [Click Here](https://www.roblox.com/games/'+CreatorId+'/)', true)
+                    .addField('Game', '**Name:** `'+PlaceInfo.Name+'`\n**ID:** `'+request.headers["roblox-id"]+'`\n**Link:** [Click Here](https://www.roblox.com/games/'+request.headers["roblox-id"]+')', true)
+                    .addField('Discord', '**Member:** <@'+value.verify.value+'>\n**ID:** `'+value.verify.value+'`', true)
+                    .setThumbnail(guild.iconURL())
+                if (bot.users.cache.get(value.verify.value)) ThisEmbed.setAuthor(bot.users.cache.get(value.verify.value).username, bot.users.cache.get(value.verify.value).displayAvatarURL())
+                if (bot.logChannel) bot.logChannel.send(ThisEmbed).catch(err => {console.log("WEB | User attempted to use a product that they didn't own. UserID: " + CreatorId + " | PlaceID: " + request.headers["roblox-id"])})
+            }
             response.status(200);
             response.json({ 
                 status: "ok",
@@ -335,13 +391,24 @@ app.get('/game/', async (request, response) => {
                     WhitelistOwner: CreatorId,
                     OwnerUUID: index
                 },
-                products: value.products
+                owned: owned
             })
             return
         }
     }
     response.status(200);
     response.json({ status: 'error', error: 'Not found.' })
+    if (!leakedGames.find(v => v == request.headers["roblox-id"])) leakedGames.push(request.headers["roblox-id"])
+    if (!leakedUsers.find(v => v == CreatorId)) leakedUsers.push(CreatorId)
+    if (!bot.logChannel) console.log("WEB | User attempted to use a product that they didn't own. UserID: " + CreatorId + " | PlaceID: " + request.headers["roblox-id"])
+    let ThisEmbed = new Discord.MessageEmbed()
+        .setColor(Number(process.env.BOT_EMBEDCOLOR))
+        .setTitle('**Leak Information**')
+        .addField('Action', '**User attempted to use a product that they didn\'t own.**', true)
+        .addField('ROBLOX', '**Username:** `'+CreatorName+'`\n**ID:** `'+CreatorId+'`\n**Link:** [Click Here](https://www.roblox.com/games/'+CreatorId+'/)', true)
+        .addField('Game', '**Name:** `'+PlaceInfo.Name+'`\n**ID:** `'+request.headers["roblox-id"]+'`\n**Link:** [Click Here](https://www.roblox.com/games/'+request.headers["roblox-id"]+')', true)
+        .setThumbnail(guild.iconURL())
+    if (bot.logChannel) bot.logChannel.send(ThisEmbed).catch(err => {console.log("WEB | User attempted to use a product that they didn't own. UserID: " + CreatorId + " | PlaceID: " + request.headers["roblox-id"])})
     return
 });
 app.get('/products/', async (request, response) => {
@@ -445,6 +512,7 @@ process.on('uncaughtException', exitHandler.bind(null, {exit:true}));
 bot.on('ready', async () => {
     let guild = bot.guilds.cache.get(process.env.BOT_PRIMARYGUILD);
     let verifiedRole = guild.roles.cache.get(process.env.BOT_VERIFIEDROLEID);
+    let logChannel = guild.channels.cache.get(process.env.BOT_LOGCHANNELID);
     if (!guild) {
         console.log('DISCORD | Not in Primary Guild! Crashing...')
         process.exit()
@@ -452,6 +520,11 @@ bot.on('ready', async () => {
     if (!verifiedRole) {
         console.log('DISCORD | Verified Role not found! Crashing...')
         process.exit()
+    }
+    if (!logChannel) {
+        console.log('DISCORD | Log Channel not found! Will log in Console.')
+    } else {
+        bot.logChannel = logChannel
     }
     if (process.argv[2] !== '--restarted') console.info('DISCORD | Online!');
     
