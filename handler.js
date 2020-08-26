@@ -133,7 +133,7 @@ bot.on('message', async (message) => {
     var command = bot.commands.get(index)
     if (!command) command = bot.aliases.get(index)
     if (!command) return
-    if (command.guildOnly && !message.guild) {
+    if (!message.guild) {
         let ThisEmbed = new Discord.MessageEmbed()
             .setColor(Number(process.env.BOT_EMBEDCOLOR))
             .setAuthor(message.author.username, message.author.displayAvatarURL())
