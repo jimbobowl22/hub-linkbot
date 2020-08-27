@@ -126,6 +126,7 @@ for (const file of fs.readdirSync('./commands').filter(file => file.endsWith('.j
     }
 }
 bot.on('message', async (message) => {
+    let guild = bot.guilds.cache.get(process.env.BOT_PRIMARYGUILD);
     if (message.author.bot) return
     if (!message.content.startsWith(process.env.BOT_PREFIX)) return
     const args = message.content.slice(process.env.BOT_PREFIX.length).split(/ +/);
