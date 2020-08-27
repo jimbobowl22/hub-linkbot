@@ -511,16 +511,16 @@ process.on('uncaughtException', exitHandler.bind(null, {exit:true}));
 // FULL SYSTEM LOGIN
 bot.on('ready', async () => {
     let guild = bot.guilds.cache.get(process.env.BOT_PRIMARYGUILD);
-    let verifiedRole = guild.roles.cache.get(process.env.BOT_VERIFIEDROLEID);
-    let logChannel = guild.channels.cache.get(process.env.BOT_LOGCHANNELID);
     if (!guild) {
         console.log('DISCORD | Not in Primary Guild! Crashing...')
         process.exit()
     }
+    let verifiedRole = guild.roles.cache.get(process.env.BOT_VERIFIEDROLEID);
     if (!verifiedRole) {
         console.log('DISCORD | Verified Role not found! Crashing...')
         process.exit()
     }
+    let logChannel = guild.channels.cache.get(process.env.BOT_LOGCHANNELID);
     if (!logChannel) {
         console.log('DISCORD | Log Channel not found! Will log in Console.')
     } else {
