@@ -67,7 +67,7 @@ bot.functions.sendFile = async (member, pid) => {
     await member.send(ThisEmbed).catch(err => {
         sent = false
     })
-    let file = new Discord.MessageAttachment(path, member.user.id+'-'+pid+'.'+path.split('.')[path.split('.').length - 1])
+    let file = new Discord.MessageAttachment(path, pid+'.'+path.split('.')[path.split('.').length - 1])
     await member.send(file).catch(err => {
         sent = false
     })

@@ -45,7 +45,7 @@ module.exports = {
             if (set) {
                 let index = set[0]
                 let value = set[1]
-                database.unset('users.'+index)
+                database.set('users.'+index+'.verify', {status:'link'})
                 await bot.functions.updateMember(guild.members.cache.find(m => m.user.id == member.user.id))
                 let ThisEmbed = new Discord.MessageEmbed()
                     .setColor(Number(process.env.BOT_EMBEDCOLOR))
