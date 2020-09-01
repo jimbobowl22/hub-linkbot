@@ -43,7 +43,7 @@ module.exports = {
                     .setAuthor(message.author.username, message.author.displayAvatarURL())
                     .setTitle('**Link Information**')
                     .addField('Status', ':x: **Incomplete!**', true)
-                    .addField('Error', 'User already linked.', true)
+                    .addField('Error', 'User to link not Found.', true)
                     .setThumbnail(guild.iconURL())
                 await message.channel.send(ThisEmbed)
                 return
@@ -54,7 +54,7 @@ module.exports = {
             .setAuthor(message.author.username, message.author.displayAvatarURL())
             .setTitle('**Link Information**')
             .addField('Status', ':x: **Incomplete!**', true)
-            .addField('Error', 'Not a Link Code.', true)
+            .addField('Error', 'User to link not Found.', true)
             .setThumbnail(guild.iconURL())
         await message.channel.send(ThisEmbed)
 	}

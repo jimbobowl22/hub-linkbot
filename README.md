@@ -171,7 +171,6 @@ Module.GetVerifyStatus = function(ID)
 end;
 Module.GetLinkCode = function(ID)
 	local Status, Data = HttpService.GetAsync(GetURL('/user/'..ID));
-	print(game:GetService('HttpService'):JSONEncode(Data))
 	if Data.value.verify.status == 'link' then
 		return Data.value.verify.value;
 	else
