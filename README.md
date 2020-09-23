@@ -152,50 +152,80 @@ local HttpService = {
 };
 local Module = {};
 Module.GetStatus = function(ID)
-	local Status, Data = HttpService.GetAsync(GetURL('/'));
-	if not Data then
-		return false;
-	end;
-	if Data.running == true then
-		return true;
-	end;
-	return false;
+	local RetVal = nil;
+	local s = pcall(function()
+		local Status, Data = HttpService.GetAsync(GetURL('/'));
+		if not Data then
+			RetVal = false;
+		end;
+		if Data.running == true then
+			RetVal = true;
+		end;
+		RetVal = false;
+	end)
+	return RetVal
 end;
 Module.GetUserProducts = function(ID)
-	local Status, Data = HttpService.GetAsync(GetURL('/user/'..ID));
-	return Data.value.products;
+	local RetVal = nil;
+	local s = pcall(function()
+		local Status, Data = HttpService.GetAsync(GetURL('/user/'..ID));
+		RetVal = Data.value.products;
+	end)
+	return RetVal
 end;
 Module.GetVerifyStatus = function(ID)
-	local Status, Data = HttpService.GetAsync(GetURL('/user/'..ID));
-	return Data.value.verify.status;
+	local RetVal = nil;
+	local s = pcall(function()
+		local Status, Data = HttpService.GetAsync(GetURL('/user/'..ID));
+		RetVal = Data.value.verify.status;
+	end)
+	return RetVal
 end;
 Module.GetLinkCode = function(ID)
-	local Status, Data = HttpService.GetAsync(GetURL('/user/'..ID));
-	if Data.value.verify.status == 'link' then
-		return Data.value.verify.value;
-	else
-		return false;
-	end;
+	local RetVal = nil;
+	local s = pcall(function()
+		local Status, Data = HttpService.GetAsync(GetURL('/user/'..ID));
+		if Data.value.verify.status == 'link' then
+			RetVal = Data.value.verify.value;
+		else
+			RetVal = false;
+		end;
+	end)
+	return RetVal
 end;
 Module.WaitForVerify = function(ID)
-	while true do
-		local Status, Data = HttpService.GetAsync(GetURL('/user/'..ID));
-		if Data.value.verify.status == 'complete' then
-			return;
+	local s = pcall(function()
+		while true do
+			local Status, Data = HttpService.GetAsync(GetURL('/user/'..ID));
+			if Data.value.verify.status == 'complete' then
+				break;
+			end;
+			wait(2);
 		end;
-		wait(2);
-	end;
+	end)
 end;
 Module.GetAllProducts = function(ID)
-	local Status, Data = HttpService.GetAsync(GetURL('/products'));
-	return Data.products;
+	local RetVal = nil;
+	local s = pcall(function()
+		local Status, Data = HttpService.GetAsync(GetURL('/products'));
+		RetVal = Data.products;
+	end)
+	return RetVal
 end;
 Module.WhitelistUser = function(Product, ID)
-	local Status, Data = HttpService.GetAsync(GetURL('/products/give/'..Product..'/'..ID));
-	return Data.dm;
+	local RetVal = nil;
+	local s = pcall(function()
+		local Status, Data = HttpService.GetAsync(GetURL('/products/give/'..Product..'/'..ID));
+		RetVal = Data.dm;
+	end)
+	return RetVal
 end;
 Module.RevokeUser = function(Product, ID)
-	local Status, Data = HttpService.GetAsync(GetURL('/products/revoke/'..Product..'/'..ID));
+	local RetVal = nil;
+	local s = pcall(function()
+		local Status, Data = HttpService.GetAsync(GetURL('/products/revoke/'..Product..'/'..ID));
+	end)
+	return RetVal
 end;
 return Module;
 ```
