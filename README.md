@@ -91,6 +91,7 @@ This section is not recommended unless you know exactly what you are doing and h
 - **GET** `/products/revoke/[Product ID]/[ROBLOX User ID]/` This endpoint is used to revoke the whitelist of a product for a user. This will not send the user a DM. (Template: `{"status":"ok","success":true}`, this endpoint requires an API key.)
 - **GET** `/users/[ROBLOX User ID]/` This endpoint is used to view all information collected about a user. Please note that the field labelled "index" is the user's UUID, which you can search for a profile with if needed in Discord. (Template: `{"status":"ok","index":"userUUID","value":{"robloxId":"userROBLOXID","robloxUsername":"userROBLOXUsername","verify":{"status":"complete/link","value":"discordID/linkcode"},"products":["insert","array","of","product","ids"]}}`, this endpoint requires an API key.)
 
+*Please note that all endpoints that require an API key shall have `?key=[API KEY]` added to the end of the URL.*
 When encountering errors, the website will return something such as: `{"status":"error", "error":"errorMessage}`
 Most of the error messages are `User not found`, `Product not found`, and stuff like that. Feel free to take a look at the handler.js file to take a look at every error if you are looking into handling it through your Hub. (Line: 195)
 
