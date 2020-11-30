@@ -5,7 +5,7 @@
 # Hub Whitelist Bot (jdwoj5)
 This whitelisting bot is made for ROBLOX Tech Groups to use in their Discord Servers. It will help deliver products through web requests and store data of users. Please note that while this works, it may not be so appealing to the eye as the Zing Tech one is, but it works nevertheless and has more features.
 
-**DEAR USERS! THERE WAS A NEW DISCORD UPDATE WHICH NOW REQUIRES US TO ENABLE A SETTING WITH THE BOT CALLED "SERVER MEMBER INTENTS"!***
+***DEAR USERS! THERE WAS A NEW DISCORD UPDATE WHICH NOW REQUIRES US TO ENABLE A SETTING WITH THE BOT CALLED "SERVER MEMBER INTENTS"!***
 
 ## Installation
 To install this Discord Bot, you will need to do the following:
