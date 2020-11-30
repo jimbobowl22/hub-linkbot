@@ -39,6 +39,10 @@ if (!fs.existsSync(dir)){
 }
 
 // DISCORD CLIENT HANDLING
+const intents = new Discord.Intents([ //  ADDITION COURTESY OF DarkMatterMatt ON GITHUB!
+    Discord.Intents.NON_PRIVILEGED,
+    "GUILD_MEMBERS",
+]);
 const bot = new Discord.Client({
     presence: {
         status: 'dnd',
@@ -46,7 +50,8 @@ const bot = new Discord.Client({
             name: 'with some Products.',
             type: 'PLAYING'
         }
-    }
+    },
+    ws: { intents }
 });
 bot.logChannel = false;
 bot.commands = new Discord.Collection();
