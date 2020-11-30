@@ -21,7 +21,7 @@ To install this Discord Bot, you will need to do the following:
     - If you are using your local computer on a home WiFi network, you need to figure out how to Port Forward the port you plan to use for this system.
 2. Ensure it has the [Node.js](https://nodejs.org/en/) engine installed.
 3. Clone this repository with `git clone https://github.com/jdwoj5/hub-linkbot`
-4. Create a [Discord Application](https://discord.com/developers/applications) with a Bot created in the Bot Section.
+4. Create a [Discord Application](https://discord.com/developers/applications) with a Bot created in the Bot Section. **Make sure you enable the Server Members Intent!**
 5. Create a file named `.env` in the main folder/directory to store crucial information. 
     - Paste the following into your `.env` file:
     ```env
