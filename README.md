@@ -314,4 +314,4 @@ Here are the Credits to how this was made. If you use this is some way for any r
 
 ## Examples
 Below are a set of Discord Servers that use this bot. You may join then to take a look at how they use it.
-- Pivot Tech
+- [Valero](https://discord.gg/CUnmbaQeUK)
