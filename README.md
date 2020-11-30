@@ -307,10 +307,9 @@ return
 Here are the Credits to how this was made. If you use this is some way for any reason, I would appreciate credit for this bot, so *please* do not remove the footer in the help command. Also, please do not resell this bot. It took me a while to make, and reselling it is just offensive and wrong.
 - [discord.js's Documentation Pages](https://discord.js.org/#/docs/main/stable/general/welcome) | Helped me with how the discord.js module works, and I always use these Documentation pages when writing code.
 - [Zing Tech Whitelisting Bot](https://github.com/iPanda969/whitelistbot) | Helped me learn how to use the express module almost entirely, also greatly inspired me to make an open source bot for myself with file management.
-- [Pivot Tech's Discord](https://discord.gg/vxFvh3w) | Helped me test this system with a big tech group. (Please go check them out, it is a great example of how this bot can be, and is supposed to be used!)
-- [Pivot Tech's Hub](https://www.roblox.com/games/4944337460/Hub) | Helped me test this system on the ROBLOX-Side.
+- Pivot Tech's Discord | Helped me test this system with a big tech group. (Please go check them out, it is a great example of how this bot can be, and is supposed to be used!)
+- Pivot Tech's Hub | Helped me test this system on the ROBLOX-Side.
 
 ## Examples
 Below are a set of Discord Servers that use this bot. You may join then to take a look at how they use it.
-- [Pivot Tech](https://discord.gg/vxFvh3w)
-- [SKYtech](https://discord.gg/PsE4qwQ)
+- Pivot Tech
