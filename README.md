@@ -121,7 +121,7 @@ local Key = ""; -- API Key defined in your .env file
 	--------------
 	 WaitForVerify([User ID]) returns void (Returns when user is verified)
 	--------------
-	 GetAllProducts([User ID]) returns Array[Products]
+	 GetAllProducts() returns Array[Products]
 	--------------
 	 WhitelistUser([Product ID], [User ID]) returns true/false (Did the delivery DM succeed?)
 	--------------
