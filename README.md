@@ -155,7 +155,7 @@ local HttpService = {
 };
 local Module = {};
 Module.GetStatus = function(ID)
-	local RetVal = nil;
+	local RetVal = false;
 	local s = pcall(function()
 		local Status, Data = HttpService.GetAsync(GetURL('/'));
 		if not Data then
@@ -164,7 +164,6 @@ Module.GetStatus = function(ID)
 		if Data.running == true then
 			RetVal = true;
 		end;
-		RetVal = false;
 	end)
 	return RetVal
 end;
