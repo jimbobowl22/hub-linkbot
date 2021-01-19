@@ -27,7 +27,7 @@
   },
   "homepage": "https://github.com/jdwoj5/hub-linkbot#readme",
   "dependencies": {
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "discord.js": "^12.2.0",
     "dotenv": "^8.2.0",
     "edit-json-file": "^1.4.0",
