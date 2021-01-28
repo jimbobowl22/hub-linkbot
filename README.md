@@ -10,12 +10,12 @@
 To install this Discord Bot, you will need to do the following:
 
 1. Obtain a VPS, or a computer to host this locally. (This is probably going to be the most difficult step of the entire installation process.)
-    - Please note that Heroku will not work, as we are writing files that should be persistant, and Heroku rebuilds around every 24 hours. using Heroku would require you to rework the database system entirely to function with Heroku instead of using `.json` files.
+    - Please note that Heroku will not work, as we are writing files that should be persistant, and Heroku rebuilds around every 24 hours. using Heroku would require you to rework the database system entirely to function with Heroku instead of using `.json` files. (Edit: This re-work exists under the new firebase branch! Take a look if you are up to it.)
     - Glitch will not work unless you boost your project. As pinging services have been banned, uptime of the bot is crucial.
     - You will need to put the IP of the place you are running the bot in your products and your hub, so we recommend a few ways to secure this information:
         - Use DDoS protection, a VPN, or a proxy of sorts.
         - Host on a VPS to prevent your personal IP from getting leaked.
-        - Obfuscate all scripts that contain your IP with Luraph's `LPH_ENCSTR()` system.
+        - Obfuscate all scripts that contain your IP with Luraph's `LPH_ENCSTR()` system, or a non-constant dumpable obfuscator similar to PSU.
         - Use a domain name. (I have no experience with Domains, so do not trust this security precaution or go out of your way to get this.)
     - If you are using your local computer on a home WiFi network, you need to figure out how to Port Forward the port you plan to use for this system.
 2. Ensure it has the [Node.js](https://nodejs.org/en/) engine installed.
